@@ -35,7 +35,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhyous.CS6210.Hw1.LogClient
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhyous.CS6210.Hw1.LogServer.Tests", "Rhyous.CS6210.Hw1.LogServer.Tests\Rhyous.CS6210.Hw1.LogServer.Tests.csproj", "{C8540D16-2E60-40D7-9052-2D3AF378AFCB}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{3BD8E1C2-7CDD-4451-8D5A-0A5FFB7F0D93}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{3BD8E1C2-7CDD-4451-8D5A-0A5FFB7F0D93}"
+	ProjectSection(SolutionItems) = preProject
+		Docs\Visio Diagram.vsdx = Docs\Visio Diagram.vsdx
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
