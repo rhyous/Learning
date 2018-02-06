@@ -8,7 +8,7 @@ namespace Rhyous.CS6210.Hw1.OutBreakAnalyzer
     {
         static void Main(string[] args)
         {
-            ArgsManager.Instance.Start(new ArgsHandler(), args);
+            new ArgsManager<ArgsHandler>().Start(args);
         }
     }
 }

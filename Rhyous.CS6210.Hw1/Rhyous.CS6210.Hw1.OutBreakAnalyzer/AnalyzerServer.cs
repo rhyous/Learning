@@ -18,7 +18,7 @@ namespace Rhyous.CS6210.Hw1.OutBreakAnalyzer
         public void Start(string endpoint)
         {
             var socketType = ZSocketType.PULL;
-            Logger.WriteLine($"Starting {Name} on {endpoint}.");
+            Logger.WriteLine($"Starting {Name} on {endpoint}.", new VectorTimeStamp(0,0,1));
             Start(endpoint, socketType, ReceiveAction);
         }
 

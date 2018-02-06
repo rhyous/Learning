@@ -6,7 +6,7 @@ namespace Rhyous.CS6210.Hw1.LogServer
     {
         static void Main(string[] args)
         {
-            ArgsManager.Instance.Start(new ArgsHandler(), args);
+            new ArgsManager<ArgsHandler>().Start(args);
         }
     }
 }

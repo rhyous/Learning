@@ -8,6 +8,8 @@ namespace Rhyous.CS6210.Hw1.Simulator
 {
     public class ReportAction
     {
+        public static int SendActionCounter;
+
         public ReportAction(TimeSimulator timeSimulator, 
                             Random random, 
                             DiseaseRecordGenerator generator,
@@ -34,7 +36,11 @@ namespace Rhyous.CS6210.Hw1.Simulator
                 list.Add(DiseaseGenerator.Generate(TimeSimulator.Current, Random));
             }
             DiseaseSimulatorClient.Client.Connect(Endpoint);
-            var json = JsonConvert.SerializeObject(list);
+            var packet = new Packet<List<Record>>();
+            packet.Payload = list;
+            packet.VectorTimeStamp = new VectorTimeStamp(SendActionCounter++, 0 , 0);
+            packet.Sent = current;
+            var json = JsonConvert.SerializeObject(packet);
             var frame = new ZFrame(json);
             Console.WriteLine("Sent: ");
             Console.WriteLine(json);

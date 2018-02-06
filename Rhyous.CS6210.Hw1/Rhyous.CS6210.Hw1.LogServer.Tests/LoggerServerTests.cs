@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using ZeroMQ;
 using Rhyous.CS6210.Hw1.LogClient;
+using Rhyous.CS6210.Hw1.Models;
 
 namespace Rhyous.CS6210.Hw1.LogServer.Tests
 {
@@ -37,16 +38,17 @@ namespace Rhyous.CS6210.Hw1.LogServer.Tests
             pushSocket.Connect(endpoint);
 
             var loggerClient = new LoggerClient(endpoint, clientName);
+            var vts = new VectorTimeStamp(0, 0, 0);
 
             // Act
-            loggerClient.WriteLine(msgLogger);
+            loggerClient.WriteLine(msgLogger, vts);
             Thread.Sleep(25);
             pushSocket.Send(new ZFrame(msgPushSocket));
             task.Wait();
 
             // Assert
             Assert.AreEqual(2, logList.Count);
-            Assert.AreEqual($"{clientName}: {msgLogger}", logList[0]);
+            Assert.AreEqual($"{clientName}:{vts}: {msgLogger}", logList[0]);
             Assert.AreEqual(msgPushSocket, logList[1]);
         }
     }

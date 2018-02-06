@@ -6,7 +6,7 @@ namespace Rhyous.CS6210.Hw1.HealthDistrict.Arguments
 {
     // Add this line of code to Main() in Program.cs
     //
-    //   ArgsManager.Instance.Start(new ArgsHandler(), args);
+    //   new ArgsManager<ArgsHandler>().Start(args);
     //
 
     /// <summary>
@@ -15,9 +15,9 @@ namespace Rhyous.CS6210.Hw1.HealthDistrict.Arguments
     /// </summary>
     public sealed class ArgsHandler : ArgsHandlerBase
     {
-        public ArgsHandler()
+        public override void InitializeArguments(IArgsManager argsManager)
         {
-            Arguments = new List<Argument>
+            Arguments.AddRange(new List<Argument>
             {
                 new Argument
                 {
@@ -45,7 +45,7 @@ namespace Rhyous.CS6210.Hw1.HealthDistrict.Arguments
                     DefaultValue = "EndPoint1",
                     Example = "{name}=Endpoint1"                    
                 }
-            };
+            });
         }
 
         public override void HandleArgs(IReadArgs inArgsHandler)

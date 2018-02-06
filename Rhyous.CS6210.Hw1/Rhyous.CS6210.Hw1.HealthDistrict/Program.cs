@@ -7,7 +7,7 @@ namespace Rhyous.CS6210.Hw1.HealthDistrict
     {
         static void Main(string[] args)
         {
-            ArgsManager.Instance.Start(new ArgsHandler(), args);
+            new ArgsManager<ArgsHandler>().Start(args);
         }
     }
 }

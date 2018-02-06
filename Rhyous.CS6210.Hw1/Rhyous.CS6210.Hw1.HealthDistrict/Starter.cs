@@ -17,6 +17,8 @@ namespace Rhyous.CS6210.Hw1.HealthDistrict
             Console.WriteLine("Endpoint: " + endpoint);
             var districtServer = new DistrictServer();
             districtServer.Start(endpoint);
+
+
         }
     }
 }

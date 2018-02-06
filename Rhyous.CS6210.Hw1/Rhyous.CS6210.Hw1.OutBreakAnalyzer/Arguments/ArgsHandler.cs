@@ -6,7 +6,7 @@ namespace Rhyous.CS6210.Hw1.OutBreakAnalyzer.Arguments
 {
     // Add this line of code to Main() in Program.cs
     //
-    //   ArgsManager.Instance.Start(new ArgsHandler(), args);
+    //   new ArgsManager<ArgsHandler>().Start(args);
     //
 
     /// <summary>
@@ -15,9 +15,9 @@ namespace Rhyous.CS6210.Hw1.OutBreakAnalyzer.Arguments
     /// </summary>
     public sealed class ArgsHandler : ArgsHandlerBase
     {
-        public ArgsHandler()
+        public override void InitializeArguments(IArgsManager argsManager)
         {
-            Arguments = new List<Argument>
+            Arguments.AddRange(new List<Argument>
             {
                 new Argument
                 {
@@ -41,7 +41,7 @@ namespace Rhyous.CS6210.Hw1.OutBreakAnalyzer.Arguments
                 {
                     Name = Constants.Name,
                     ShortName = "n",
-                    Description = "The disease outbreak analyzer zerver name",
+                    Description = "The disease outbreak analyzer server name",
                     Example = "{name}=Measels Outbreak Analyzer"
                 },
                 new Argument
@@ -69,7 +69,7 @@ namespace Rhyous.CS6210.Hw1.OutBreakAnalyzer.Arguments
                     DefaultValue = "tcp://127.0.0.1:5501",
                     Action = (value) => { Console.WriteLine(value); }
                 }
-            };
+            });
         }
 
         public override void HandleArgs(IReadArgs inArgsHandler)

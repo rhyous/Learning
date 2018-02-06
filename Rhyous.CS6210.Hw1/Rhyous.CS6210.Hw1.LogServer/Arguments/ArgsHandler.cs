@@ -7,7 +7,7 @@ namespace Rhyous.CS6210.Hw1.LogServer
 {
     // Add this line of code to Main() in Program.cs
     //
-    //   ArgsManager.Instance.Start(new ArgsHandler(), args);
+    //   new ArgsManager<ArgsHandler>().Start(args);
     //
 
     /// <summary>
@@ -16,9 +16,9 @@ namespace Rhyous.CS6210.Hw1.LogServer
     /// </summary>
     public sealed class ArgsHandler : ArgsHandlerBase
     {
-        public ArgsHandler()
+        public override void InitializeArguments(IArgsManager argsManager)
         {
-            Arguments = new List<Argument>
+            Arguments.AddRange(new List<Argument>
             {
                 new Argument
                 {
@@ -58,7 +58,7 @@ namespace Rhyous.CS6210.Hw1.LogServer
                     AllowedValues = CommonAllowedValues.TrueFalse,
                     Action = (value) => { Console.WriteLine(value); }
                 },
-            };
+            });
         }
 
         public override void HandleArgs(IReadArgs inArgsHandler)

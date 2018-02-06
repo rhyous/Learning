@@ -18,7 +18,7 @@ namespace Rhyous.CS6210.Hw1.LogClient
             ClientName = clientName;
             SendClient = new SendClient();
         }
-
+        
         public void WriteLine(string message)
         {
             if (!IsConnected)
@@ -27,6 +27,16 @@ namespace Rhyous.CS6210.Hw1.LogClient
                 IsConnected = true;
             }
             SendClient.Send($"{ClientName}: {message}");
-        }        
+        }
+
+        public void WriteLine(string message, IVectorTimeStamp vts)
+        {
+            if (!IsConnected)
+            {
+                SendClient.Connect(LogServerEndpoint, ZSocketType.PUSH);
+                IsConnected = true;
+            }
+            SendClient.Send($"{ClientName}:{vts}: {message}");
+        }
     }
 }

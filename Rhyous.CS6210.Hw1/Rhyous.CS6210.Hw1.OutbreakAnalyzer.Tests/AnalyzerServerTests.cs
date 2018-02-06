@@ -17,7 +17,7 @@ namespace Rhyous.CS6210.Hw1.OutbreakAnalyzer.Tests
         {
             // Arrange
             var mockLogger = new Mock<ILogger>();
-            mockLogger.Setup(l => l.WriteLine(It.IsAny<string>())).Callback((string msg) => { Console.WriteLine(msg); });
+            mockLogger.Setup(l => l.WriteLine(It.IsAny<string>(), It.IsAny<VectorTimeStamp>()));
             var server = new AnalyzerServer("AS1", mockLogger.Object);
             var mockSocket = new Mock<IReplySocket>();
             mockSocket.Setup(s => s.Bind(It.IsAny<string>()));
@@ -32,7 +32,7 @@ namespace Rhyous.CS6210.Hw1.OutbreakAnalyzer.Tests
             // Assert
             mockSocket.Verify(s => s.Bind(It.IsAny<string>()), Times.Once());
             mockSocket.Verify(s => s.Dispose(), Times.Once());
-            mockLogger.Verify(s => s.WriteLine(It.IsAny<string>()), Times.Once());
+            mockLogger.Verify(s => s.WriteLine(It.IsAny<string>(), It.IsAny<VectorTimeStamp>()), Times.Once());
         }
     }
 }

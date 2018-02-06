@@ -4,7 +4,6 @@
     {
         public static string EndPoint = "EndPoint";
         public static string Name = "Name";
-        public static string SocketType = "SocketType";
         public static string TimeMultiplier = "TimeMultiplier";
         public static string Duration = "Duration";
         public static string Year = "Year";

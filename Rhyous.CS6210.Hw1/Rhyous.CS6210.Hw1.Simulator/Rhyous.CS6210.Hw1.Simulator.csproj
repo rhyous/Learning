@@ -93,4 +93,7 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\ZeroMQ.4.1.0.26\build\net40\ZeroMQ.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\ZeroMQ.4.1.0.26\build\net40\ZeroMQ.targets'))" />
   </Target>
+  <PropertyGroup>
+    <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)Run"</PostBuildEvent>
+  </PropertyGroup>
 </Project>

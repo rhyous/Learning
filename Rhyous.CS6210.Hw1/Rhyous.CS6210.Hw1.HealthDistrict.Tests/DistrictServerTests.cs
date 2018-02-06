@@ -4,6 +4,7 @@ using Moq;
 using Newtonsoft.Json;
 using Rhyous.CS6210.Hw1.Interfaces;
 using Rhyous.CS6210.Hw1.Models;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -23,7 +24,6 @@ namespace Rhyous.CS6210.Hw1.HealthDistrict.Tests
             var mockSocket = new Mock<IReplySocket>();
             mockSocket.Setup(s => s.Bind(It.IsAny<string>()));
             district.Socket = mockSocket.Object;
-            var record = new Record { Id = 1, Disease = 0, };
 
             // Act
             var task = Task.Run(() => { district.Start("", ZSocketType.REP, null); });
@@ -49,14 +49,25 @@ namespace Rhyous.CS6210.Hw1.HealthDistrict.Tests
 
             var mockSocket = new Mock<IReplySocket>();
             district.Socket = mockSocket.Object;
-            mockSocket.Setup(s => s.Send(It.IsAny<string>()));
+            Packet<List<Record>> responsePacket = null;
+            mockSocket.Setup(s => s.Send(It.IsAny<string>())).Callback((string sentJson)=> { responsePacket = JsonConvert.DeserializeObject<Packet<List<Record>>>(sentJson); });
+
+            var packet = new Packet<List<Record>>();
+            packet.Payload = records;
+            packet.VectorTimeStamp = new VectorTimeStamp(1,0,0);
+            var json = JsonConvert.SerializeObject(packet);
+
+            var frame = new ZFrame(json);
+            frame.Position = 0;
 
             // Act
-            district.ReceiveAction(new ZFrame(JsonConvert.SerializeObject(records)));
+            district.ReceiveAction(frame);
 
             // Assert
             mockRepo.Verify(x => x.Create(It.IsAny<IEnumerable<Record>>()), Times.Once());
             mockSocket.Verify(x => x.Send(It.IsAny<string>()), Times.Once());
+            Assert.AreEqual(1, responsePacket.VectorTimeStamp.Simulator);
+            Assert.AreEqual(1, responsePacket.VectorTimeStamp.HealthDistrict);
         }
 
         #endregion
@@ -79,13 +90,18 @@ namespace Rhyous.CS6210.Hw1.HealthDistrict.Tests
                 });
             var endpoint = "tcp://127.0.0.1:5553";
             var task = Task.Run(() => district.Start(endpoint));
-            Thread.Sleep(200);
+            Thread.Sleep(300);
 
             var context = new ZContext();
             var socket = new ZSocket(ZSocketType.REQ);
             socket.Connect(endpoint);
 
-            var json = JsonConvert.SerializeObject(records);
+            var packet = new Packet<List<Record>>();
+            packet.Payload = records;
+            packet.VectorTimeStamp = new VectorTimeStamp(1, 0, 0);
+            packet.Sent = new DateTime(2018,1,1);
+
+            var json = JsonConvert.SerializeObject(packet);
 
             // Act
             socket.Send(new ZFrame(json));

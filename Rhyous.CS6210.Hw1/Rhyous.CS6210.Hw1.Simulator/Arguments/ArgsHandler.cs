@@ -33,15 +33,6 @@ namespace Rhyous.CS6210.Hw1.Simulator.Arguments
                 },
                 new Argument
                 {
-                    Name = Constants.SocketType,
-                    ShortName = "s",
-                    Description = "The SocketType",
-                    Example = "{name}=1",
-                    DefaultValue = "REP",
-                    AllowedValues = new ObservableCollection<string>(Enum.GetNames(typeof(ZSocketType)))
-                },
-                new Argument
-                {
                     Name = Constants.Name,
                     ShortName = "n",
                     Description = "The name of this simulator.",

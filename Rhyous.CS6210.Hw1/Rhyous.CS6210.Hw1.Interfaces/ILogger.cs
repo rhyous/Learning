@@ -3,5 +3,6 @@
     public interface ILogger
     {
         void WriteLine(string message);
+        void WriteLine(string message, IVectorTimeStamp vts);
     }
 }
