@@ -16,7 +16,7 @@ namespace Rhyous.CS6210.Hw1.LogServer.Tests
         public void TestLogServer()
         {
             // Arrange
-            var endpoint = "tcp://127.0.0.1:5501";
+            var endpoint = "tcp://127.0.0.1:55010"; // Added an extra 0
             var logList = new List<string>();
             var mockLog = new Mock<ILog>();
             var loggerServer = new LoggerServer("Test Logger Server", mockLog.Object);

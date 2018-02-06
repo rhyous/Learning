@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using Rhyous.CS6210.Hw1.Models;
-using Rhyous.SimpleArgs;
 using System;
 using System.Collections.Generic;
 using ZeroMQ;
@@ -12,7 +11,8 @@ namespace Rhyous.CS6210.Hw1.Simulator
         public ReportAction(TimeSimulator timeSimulator, 
                             Random random, 
                             DiseaseRecordGenerator generator,
-                            DiseaseSimulatorClient client)
+                            DiseaseSimulatorClient client,
+                            string endpoint)
         {
             TimeSimulator = timeSimulator;
             Random = random;
@@ -24,6 +24,7 @@ namespace Rhyous.CS6210.Hw1.Simulator
         public Random Random { get; set; }
         public DiseaseRecordGenerator DiseaseGenerator { get; set; }
         public DiseaseSimulatorClient DiseaseSimulatorClient { get; set; }
+        public string Endpoint { get; set; }
         public void Action(DateTime current)
         {
             var list = new List<Record>();
@@ -32,11 +33,10 @@ namespace Rhyous.CS6210.Hw1.Simulator
             {
                 list.Add(DiseaseGenerator.Generate(TimeSimulator.Current, Random));
             }
-            var endpoint = Args.Value(Constants.EndPoint);
-            DiseaseSimulatorClient.Client.Connect(endpoint);
+            DiseaseSimulatorClient.Client.Connect(Endpoint);
             var json = JsonConvert.SerializeObject(list);
             var frame = new ZFrame(json);
-            Console.WriteLine("Sent:");
+            Console.WriteLine("Sent: ");
             Console.WriteLine(json);
             DiseaseSimulatorClient.Client.Send(json, DiseaseSimulatorClient.ReceiveAction);
         }

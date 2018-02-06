@@ -31,11 +31,14 @@ namespace Rhyous.CS6210.Hw1.Simulator
             int duration = Args.Value(Constants.Duration).To<int>();
             Logger.WriteLine($"{Constants.Duration}: {duration}");
 
+            string endpoint = Args.Value(Constants.EndPoint);
+            Logger.WriteLine($"{Constants.EndPoint}: {endpoint}");
+
             var startDate = new DateTime(year, month, day);
             Logger.WriteLine($"{Constants.StartDate}: {startDate.ToLongDateString()}");
 
             var client = new DiseaseSimulatorClient { Client = new RequestClient() };
-            var reportAction = new ReportAction(timeSimulator, new Random(), new DiseaseRecordGenerator(), client);
+            var reportAction = new ReportAction(timeSimulator, new Random(), new DiseaseRecordGenerator(), client, endpoint);
 
             timeSimulator.Start(startDate, timeMultiplier, duration, reportAction.Action);
             timeSimulator.Wait();

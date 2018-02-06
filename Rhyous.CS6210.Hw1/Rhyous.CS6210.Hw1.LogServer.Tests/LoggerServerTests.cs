@@ -16,7 +16,7 @@ namespace Rhyous.CS6210.Hw1.LogServer.Tests
         public void TestLogServerFromClient()
         {
             // Arrange
-            var endpoint = "tcp://127.0.0.1:5501";
+            var endpoint = "tcp://127.0.0.1:55011"; // Added an extra 1
             var msgPushSocket = "This is a message from a PUSH zsocket.";
             var msgLogger = "This is a test message from the LoggerClient.";
             var clientName = "Test Client";
@@ -40,6 +40,7 @@ namespace Rhyous.CS6210.Hw1.LogServer.Tests
 
             // Act
             loggerClient.WriteLine(msgLogger);
+            Thread.Sleep(25);
             pushSocket.Send(new ZFrame(msgPushSocket));
             task.Wait();
 
