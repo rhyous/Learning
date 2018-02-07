@@ -71,6 +71,10 @@
       <Project>{d4770cde-7a69-4399-81ec-e64b7256a8c5}</Project>
       <Name>Rhyous.CS6210.Hw1.Interfaces</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Rhyous.CS6210.Hw1.LogClient\Rhyous.CS6210.Hw1.LogClient.csproj">
+      <Project>{53221117-D32D-4701-AF78-AF0C688F7B51}</Project>
+      <Name>Rhyous.CS6210.Hw1.LogClient</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Rhyous.CS6210.Hw1.Models\Rhyous.CS6210.Hw1.Models.csproj">
       <Project>{4449aa76-52ec-4ec5-a836-8650a1846783}</Project>
       <Name>Rhyous.CS6210.Hw1.Models</Name>
@@ -85,11 +89,12 @@
     <Error Condition="!Exists('..\packages\ZeroMQ.4.1.0.26\build\net40\ZeroMQ.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\ZeroMQ.4.1.0.26\build\net40\ZeroMQ.targets'))" />
   </Target>
   <PropertyGroup>
-    <PostBuildEvent>set project=Logger
+    <PostBuildEvent>set project=LogServer
 if not exist "$(SolutionDir)Run\%25project%25\bin" mkdir "$(SolutionDir)Run\%25project%25\bin"
 copy "$(TargetPath)" "$(SolutionDir)Run\%25project%25"
 copy "$(TargetDir)"*.dll "$(SolutionDir)Run\%25project%25\bin"
-
-</PostBuildEvent>
+copy "$(TargetPath).config" "$(SolutionDir)Run\%25project%25"
+xcopy /f /y /i "$(TargetDir)i386" "$(SolutionDir)Run\%25project%25\bin\i386\"
+xcopy /f /y /i "$(TargetDir)amd64" "$(SolutionDir)Run\%25project%25\bin\amd64\"</PostBuildEvent>
   </PropertyGroup>
 </Project>

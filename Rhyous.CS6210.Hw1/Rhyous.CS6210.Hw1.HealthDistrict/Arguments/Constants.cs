@@ -6,5 +6,6 @@
         public static string PublisherEndpoint = "PublisherEndpoint";
         public static string DistrictServerName = "DistrictServerName";
         public static string SocketType = "SocketType";
+        public static string LoggerEndpoint = "LoggerEndpoint";
     }
 }

@@ -138,6 +138,13 @@
     <Error Condition="!Exists('..\packages\ZeroMQ.4.1.0.26\build\net40\ZeroMQ.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\ZeroMQ.4.1.0.26\build\net40\ZeroMQ.targets'))" />
   </Target>
   <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetPath)" "$(SolutionDir)Run"</PostBuildEvent>
+    <PostBuildEvent>set project=Analyzer
+if not exist "$(SolutionDir)Run\%25project%25\bin" mkdir "$(SolutionDir)Run\%25project%25\bin"
+copy "$(TargetPath)" "$(SolutionDir)Run\%25project%25"
+copy "$(TargetDir)"*.dll "$(SolutionDir)Run\%25project%25\bin"
+copy "$(TargetPath).config" "$(SolutionDir)Run\%25project%25"
+xcopy /f /y /i "$(TargetDir)i386" "$(SolutionDir)Run\%25project%25\bin\i386\"
+xcopy /f /y /i "$(TargetDir)amd64" "$(SolutionDir)Run\%25project%25\bin\amd64\"
+</PostBuildEvent>
   </PropertyGroup>
 </Project>

@@ -20,6 +20,7 @@ namespace Rhyous.CS6210.Hw1.Simulator
             Random = random;
             DiseaseGenerator = generator;
             DiseaseSimulatorClient = client;
+            Endpoint = endpoint;
         }
 
         public TimeSimulator TimeSimulator { get; set; }

@@ -42,8 +42,17 @@ namespace Rhyous.CS6210.Hw1.HealthDistrict.Arguments
                     Name = Constants.DistrictServerName,
                     ShortName = "n",
                     Description = "The endpoint name",
-                    DefaultValue = "EndPoint1",
-                    Example = "{name}=Endpoint1"                    
+                    DefaultValue = "Health District 1",
+                    Example = "{name}=Endpoint1"
+                },
+                new Argument
+                {
+                    Name = Constants.LoggerEndpoint,
+                    ShortName = "L",
+                    Description = "The logger server endpoint.",
+                    Example = "{name}=tcp://127.0.0.1:5501",
+                    DefaultValue = "tcp://127.0.0.1:5501",
+                    Action = (value) => { Console.WriteLine(value); }
                 }
             });
         }
