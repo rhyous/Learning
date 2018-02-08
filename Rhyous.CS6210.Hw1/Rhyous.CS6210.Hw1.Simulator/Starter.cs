@@ -18,6 +18,7 @@ namespace Rhyous.CS6210.Hw1.Simulator
             var name = Args.Value(Constants.Name);
             Logger = new LoggerClient(Args.Value(Constants.LoggerEndpoint), name);
             Logger.WriteLine($"{name} has started.");
+            Console.WriteLine("Simulator: " + name);
 
             var timeSimulator = new TimeSimulator();
             

@@ -48,6 +48,8 @@
     <Compile Include="Packet.cs" />
     <Compile Include="RequestClient.cs" />
     <Compile Include="PullServer.cs" />
+    <Compile Include="Subscriber.cs" />
+    <Compile Include="SubscribeSocketAdapter.cs" />
     <Compile Include="SendSocketClientAdapter.cs" />
     <Compile Include="SendClient.cs" />
     <Compile Include="Disease.cs" />

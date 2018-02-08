@@ -16,23 +16,23 @@ namespace Rhyous.CS6210.Hw1.HealthDistrict.Tests
     public class OutbreakSubscriberTests
     {
         [TestMethod]
-        public void OutbreakSubscriberStart()
+        public void OutbreakSubscriberConnect()
         {
             // Arrange
-            var district = new OutbreakSubsriber();
-            var mockSocket = new Mock<IReplySocket>();
-            mockSocket.Setup(s => s.Bind(It.IsAny<string>()));
-            district.Socket = mockSocket.Object;
+            var mockLogger = new Mock<ILogger>();
+            var subscriber = new OutbreakSubscriber(mockLogger.Object);
+            var mockSocket = new Mock<ISubscribeSocket>();
+            mockSocket.Setup(s => s.Connect(It.IsAny<string>()));
+            mockSocket.Setup(s => s.Subscribe(It.IsAny<string>()));
+            subscriber.Socket = mockSocket.Object;
             var record = new Record { Id = 1, Disease = 0, };
 
             // Act
-            var task = Task.Run(() => { district.Start("", ZSocketType.REP, null); });
+            var task = Task.Run(() => { subscriber.Connect(""); });
             Thread.Sleep(200);
-            district.Stop();
 
             // Assert
-            mockSocket.Verify(s => s.Bind(It.IsAny<string>()), Times.Once());
-            mockSocket.Verify(s => s.Dispose(), Times.Once());
+            mockSocket.Verify(s => s.Connect(It.IsAny<string>()), Times.Once());
         }
     }
 }

@@ -30,11 +30,11 @@ namespace Rhyous.CS6210.Hw1.HealthDistrict.Arguments
                 },
                 new Argument
                 {
-                    Name = Constants.PublisherEndpoint,
+                    Name = Constants.PublisherEndpoints,
                     ShortName = "p",
-                    Description = "The endpoint for the server service.",
-                    Example = "{name}=tcp://127.0.0.1:5553",
-                    DefaultValue = "tcp://127.0.0.1:5553",
+                    Description = "A comma separate array of endpoints for the publishers.",
+                    Example = "{name}=tcp://127.0.0.1:5553,tcp://127.0.0.1:5554",
+                    DefaultValue = "tcp://127.0.0.1:5553,tcp://127.0.0.1:5554",
                     Action = (value) => { Console.WriteLine(value); }
                 },
                 new Argument

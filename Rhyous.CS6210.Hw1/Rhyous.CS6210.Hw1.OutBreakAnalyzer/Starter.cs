@@ -1,6 +1,7 @@
 ﻿using Rhyous.CS6210.Hw1.Interfaces;
 using Rhyous.CS6210.Hw1.LogClient;
 using Rhyous.SimpleArgs;
+using System;
 using System.Threading.Tasks;
 using ZeroMQ;
 
@@ -14,6 +15,8 @@ namespace Rhyous.CS6210.Hw1.OutBreakAnalyzer
             var name = Args.Value(Constants.Name);
             if (string.IsNullOrWhiteSpace(name))
                 name = Args.Value(Constants.Disease);
+            Console.WriteLine("Disease Analyzer: " + name);
+
             Logger = new LoggerClient(Args.Value(Constants.LoggerEndpoint), name);
             var analyzerEndpoint = Args.Value(Constants.AnalyzerEndpoint);
             var AnalyzerServer = new AnalyzerServer(name, Logger);

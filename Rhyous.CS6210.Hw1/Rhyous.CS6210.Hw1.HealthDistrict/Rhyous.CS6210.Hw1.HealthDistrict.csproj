@@ -77,11 +77,12 @@
   <ItemGroup>
     <Compile Include="Arguments\ArgsHandler.cs" />
     <Compile Include="Arguments\Constants.cs" />
-    <Compile Include="OutbreakSubsriber.cs" />
+    <Compile Include="OutbreakSubscriber.cs" />
     <Compile Include="DistrictServer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Starter.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

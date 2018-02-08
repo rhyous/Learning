@@ -3,7 +3,7 @@
     internal class Constants
     {
         public static string DistrictServerEndPoint = "DistrictServerEndPoint";
-        public static string PublisherEndpoint = "PublisherEndpoint";
+        public static string PublisherEndpoints = "PublisherEndpoints";
         public static string DistrictServerName = "DistrictServerName";
         public static string SocketType = "SocketType";
         public static string LoggerEndpoint = "LoggerEndpoint";

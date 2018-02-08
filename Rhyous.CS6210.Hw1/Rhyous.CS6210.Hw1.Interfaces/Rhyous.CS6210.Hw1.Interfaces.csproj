@@ -64,6 +64,8 @@
     <Compile Include="IRepository.cs" />
     <Compile Include="IServer.cs" />
     <Compile Include="IReceiveFrame.cs" />
+    <Compile Include="ISubscribe.cs" />
+    <Compile Include="ISubscribeSocket.cs" />
     <Compile Include="IVectorTimeStamp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
