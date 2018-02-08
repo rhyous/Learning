@@ -141,6 +141,9 @@ if not exist "$(SolutionDir)Run\%25project%25\bin" mkdir "$(SolutionDir)Run\%25p
 copy "$(TargetPath)" "$(SolutionDir)Run\%25project%25"
 copy "$(TargetDir)"*.dll "$(SolutionDir)Run\%25project%25\bin"
 copy "$(TargetPath).config" "$(SolutionDir)Run\%25project%25"
+if not exist "$(SolutionDir)Run\%25project%25\Data" mkdir "$(SolutionDir)Run\%25project%25\Data"
+copy "$(TargetDir)Data\Records.mdf" "$(SolutionDir)Run\%25project%25\Data"
+copy "$(TargetDir)Data\Records_log.ldf" "$(SolutionDir)Run\%25project%25\Data"
 xcopy /f /y /i "$(TargetDir)i386" "$(SolutionDir)Run\%25project%25\bin\i386\"
 xcopy /f /y /i "$(TargetDir)amd64" "$(SolutionDir)Run\%25project%25\bin\amd64\"</PostBuildEvent>
   </PropertyGroup>

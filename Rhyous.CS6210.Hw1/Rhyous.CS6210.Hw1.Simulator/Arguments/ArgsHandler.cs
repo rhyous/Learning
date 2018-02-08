@@ -28,8 +28,7 @@ namespace Rhyous.CS6210.Hw1.Simulator.Arguments
                     ShortName = "e",
                     Description = "The endpoint for the server service.",
                     Example = "{name}=tcp://127.0.0.1:5552",
-                    DefaultValue = "tcp://127.0.0.1:5552",
-                    Action = (value) => { Console.WriteLine(value); }
+                    DefaultValue = "tcp://127.0.0.1:5552"
                 },
                 new Argument
                 {
@@ -46,7 +45,10 @@ namespace Rhyous.CS6210.Hw1.Simulator.Arguments
                     Description = "This is how long 1 second simulates. For example: 3600 simulates 1 hour every second.",
                     DefaultValue = "3600",
                     Example = "{name}=3600",
-                    CustomValidation = (val) => { return Regex.IsMatch(val, CommonAllowedValues.Digits); }
+                    CustomValidation = (val) => 
+                    {
+                        return Regex.IsMatch(val, CommonAllowedValues.Digits);
+                    }
                 },
                 new Argument
                 {
@@ -55,7 +57,10 @@ namespace Rhyous.CS6210.Hw1.Simulator.Arguments
                     Description = "The length of time in days the simulation runs. Max time simulation is 9999 days.",
                     DefaultValue = "31",
                     Example = "{name}=31",
-                    CustomValidation = (val) => { return Regex.IsMatch(val, "[0-9]{4}"); }
+                    CustomValidation = (val) => 
+                    {
+                        return Regex.IsMatch(val, "[1-9][0-9]{0,4}");
+                    }
                 },
                 new Argument
                 {
@@ -64,7 +69,10 @@ namespace Rhyous.CS6210.Hw1.Simulator.Arguments
                     Description = "The year the simulation starts.",
                     DefaultValue = "2018",
                     Example = "{name}=2018",
-                    CustomValidation = (val) => { return Regex.IsMatch(val, "[0-9]{4}"); }
+                    CustomValidation = (val) => 
+                    {
+                        return Regex.IsMatch(val, "[1-9][0-9]{3}");
+                    }
                 },
                 new Argument
                 {
@@ -73,7 +81,10 @@ namespace Rhyous.CS6210.Hw1.Simulator.Arguments
                     Description = "The month the simulation starts.",
                     DefaultValue = "01",
                     Example = "{name}=01",
-                    CustomValidation = (val) => { return Regex.IsMatch(val, "[0]?[1-9]|[1][0-2]"); }
+                    CustomValidation = (val) => 
+                    {
+                        return Regex.IsMatch(val, "[0]?[1-9]|[1][0-2]");
+                    }
                 },
                 new Argument
                 {
@@ -82,7 +93,10 @@ namespace Rhyous.CS6210.Hw1.Simulator.Arguments
                     Description = "The day the simulation starts.",
                     DefaultValue = "01",
                     Example = "{name}=01",
-                    CustomValidation = (val) => { return Regex.IsMatch(val, "[0]?[1-9]|[1-2][0-9]|[3][0-1]"); }
+                    CustomValidation = (val) => 
+                    {
+                        return Regex.IsMatch(val, "[0]?[1-9]|[1-2][0-9]|[3][0-1]");
+                    }
                 },
                 new Argument
                 {
@@ -90,8 +104,7 @@ namespace Rhyous.CS6210.Hw1.Simulator.Arguments
                     ShortName = "L",
                     Description = "The logger server endpoint.",
                     Example = "{name}=tcp://127.0.0.1:5501",
-                    DefaultValue = "tcp://127.0.0.1:5501",
-                    Action = (value) => { Console.WriteLine(value); }
+                    DefaultValue = "tcp://127.0.0.1:5501"
                 },
                 new ConfigFileArgument(argsManager)
             });

@@ -37,6 +37,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhyous.CS6210.Hw1.LogServer
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{3BD8E1C2-7CDD-4451-8D5A-0A5FFB7F0D93}"
 	ProjectSection(SolutionItems) = preProject
+		Docs\Report.docx = Docs\Report.docx
 		Docs\Visio Diagram.vsdx = Docs\Visio Diagram.vsdx
 	EndProjectSection
 EndProject
