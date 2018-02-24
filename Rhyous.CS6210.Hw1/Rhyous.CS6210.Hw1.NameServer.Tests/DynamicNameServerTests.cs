@@ -16,7 +16,7 @@ namespace Rhyous.CS6210.Hw1.NameServer.Tests
             // Arrange
             var mockLogger = new Mock<ILogger>();
             var mockRepo = new Mock<IRepository<SystemRegistration>>();
-            var server = new DynamicNameServer("DNS System", new CryptoRandom(), TimeSpan.Zero, mockLogger.Object)
+            var server = new DynamicNameServer("DNS System", mockLogger.Object)
             {
                 UseLocalHost = true,
                 Logger = mockLogger.Object,
@@ -40,7 +40,7 @@ namespace Rhyous.CS6210.Hw1.NameServer.Tests
             // Arrange
             var mockLogger = new Mock<ILogger>();
             var mockRepo = new Mock<IRepository<SystemRegistration>>();
-            var server = new DynamicNameServer("DNS System", new CryptoRandom(), TimeSpan.Zero, mockLogger.Object)
+            var server = new DynamicNameServer("DNS System", mockLogger.Object)
             {
                 UseLocalHost = true,
                 Logger = mockLogger.Object,

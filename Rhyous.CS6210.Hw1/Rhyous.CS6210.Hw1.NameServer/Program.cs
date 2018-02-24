@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Rhyous.CS6210.Hw1.NameServer.Arguments;
+using Rhyous.SimpleArgs;
 
 namespace Rhyous.CS6210.Hw1.NameServer
 {
@@ -10,6 +7,7 @@ namespace Rhyous.CS6210.Hw1.NameServer
     {
         static void Main(string[] args)
         {
+            new ArgsManager<ArgsHandler>().Start(args);
         }
     }
 }

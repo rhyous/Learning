@@ -41,6 +41,11 @@ namespace Rhyous.CS6210.Hw1.Repository
             return Context.Entities.FirstOrDefault(e => e.Id == id);
         }
 
+        public T Read(string name)
+        {
+            return Context.Entities.FirstOrDefault(e => e.Name == name);
+        }
+
         public T Update(T entity)
         {
             var existingEntity = Context.Entities.First(f => f.Id == entity.Id);

@@ -10,6 +10,7 @@ namespace Rhyous.CS6210.Hw1.Interfaces
         IEnumerable<T> Create(IEnumerable<T> entities);
         IQueryable<T> Read();
         T Read(int id);
+        T Read(string name);
         T Update(T entity);
         bool Delete(T entity);
     }

@@ -18,7 +18,7 @@ namespace Rhyous.CS6210.Hw1.NameServer.Arguments
     {
         public override void InitializeArguments(IArgsManager argsManager)
         {
-            Arguments.AddRange(CommonArguments.Create());
+            Arguments.AddRange(CommonArguments.Create("NameServer", "6001"));
             Arguments.AddRange(new List<Argument>
             {
                 // Add more args here
@@ -33,12 +33,13 @@ namespace Rhyous.CS6210.Hw1.NameServer.Arguments
                 // },
                 new ConfigFileArgument(argsManager) // This is a special Argument type to allow for args in a file
             });
+            Arguments.RemoveAt(2); // Remove common logger endpoint as this is logger
         }
 
         public override void HandleArgs(IReadArgs inArgsHandler)
         {
             base.HandleArgs(inArgsHandler);
-            Console.WriteLine("I handled the args!!!");
+            Starter.Start();
         }
     }
 }

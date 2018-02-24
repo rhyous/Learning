@@ -16,15 +16,12 @@ namespace Rhyous.CS6210.Hw1.NameServer
         public bool UseLocalHost = false;
         internal ILogger Logger;
         internal SystemRegistration SystemRegistration;
-        internal TimeSpan DateTimeOffset;
-        internal CryptoRandom Random;
+        internal CryptoRandom Random = new CryptoRandom();
         internal byte[] Subnet = new byte[] { 192, 168, 0 };
         internal int NextIp = 2;
 
-        public DynamicNameServer(string name, CryptoRandom random, TimeSpan dateTimeOffset, ILogger logger)
+        public DynamicNameServer(string name, ILogger logger)
         {
-            Random = random;
-            DateTimeOffset = dateTimeOffset;
             Logger = logger;
             SystemRegistration = new SystemRegistration { Name = name };
         }
@@ -33,7 +30,8 @@ namespace Rhyous.CS6210.Hw1.NameServer
         {
             get { return _Repo ?? (_Repo = new Repository<SystemRegistration>()); }
             set { _Repo = value; }
-        } private IRepository<SystemRegistration> _Repo;
+        }
+        private IRepository<SystemRegistration> _Repo;
 
         public void SelfRegister()
         {
@@ -67,36 +65,57 @@ namespace Rhyous.CS6210.Hw1.NameServer
                 var createdregistration = Repo.Create(registration);
                 return true;
             }
-        } private object Sync = new object() { };
-        
+        }
+        private object Sync = new object() { };
+
         public void Start(string endpoint)
         {
+            SelfRegister();
             Start(endpoint, ZSocketType.REP, ReceiveAction);
         }
 
         internal void ReceiveAction(ZFrame frame)
         {
             var json = frame.ReadString();
-            var vts = new VectorTimeStamp();
             Logger.WriteLine("Received: ");
             Logger.WriteLine(json);
-            var packet = JsonConvert.DeserializeObject<Packet<SystemRegistration>>(json);
+            if (json.StartsWith("QRY"))
+                RegisterSystem(json.Substring(5)); // Must prefix JSON with "QRY: "
+            if (json.StartsWith("REG"))
+                RegisterSystem(json.Substring(5)); // Must prefix JSON with "REG: "
+        }
+        private void QuerySystem(string json)
+        {
+            var packet = JsonConvert.DeserializeObject<Packet<NsQuery>>(json);
+            var query = packet.Payload;
+            var vts = packet.VectorTimeStamp;
+            Logger.WriteLine($"Revieved query request from system: {packet.SenderId} for a system with name: {query.Name}.", vts.Update(SystemRegistration, DateTime.Now));
+            var reg = Repo.Read(query.Name);
+            var response = new Packet<SystemRegistration>
+            {
+                Payload = reg,
+                VectorTimeStamp = vts.Update(SystemRegistration, DateTime.Now)
+            };
+            var responseJson = JsonConvert.SerializeObject(response);
+            Send(responseJson);
+        }
+
+        private void RegisterSystem(string json)
+        {
+            var packet = JsonConvert.DeserializeObject<Packet<SystemRegistration>>(json.Substring(5));
             var systemRegistration = packet.Payload;
-            Logger.WriteLine($"Revieved system registration request from system: {systemRegistration.Name}.", vts);
+            var vts = packet.VectorTimeStamp;
+            Logger.WriteLine($"Revieved system registration request from system: {systemRegistration.Name}.", vts.Update(SystemRegistration, DateTime.Now));
             if (RegisterSystem(systemRegistration))
             {
-                var response = new Packet<SystemRegistration>();
-                response.Payload = systemRegistration;
-                response.VectorTimeStamp = packet.VectorTimeStamp;
-                response.VectorTimeStamp.Update(SystemRegistration, DateTime.Now.Add(DateTimeOffset));
+                var response = new Packet<SystemRegistration>
+                {
+                    Payload = systemRegistration,
+                    VectorTimeStamp = packet.VectorTimeStamp.Update(SystemRegistration, DateTime.Now)
+                };
                 var responseJson = JsonConvert.SerializeObject(response);
                 Send(responseJson);
             }
-        }
-
-        public byte GetIp()
-        {
-            return (byte)Random.Next(2, 254);
         }
     }
 }

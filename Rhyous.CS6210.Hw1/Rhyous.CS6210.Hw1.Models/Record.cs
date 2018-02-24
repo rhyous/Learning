@@ -13,6 +13,8 @@ namespace Rhyous.CS6210.Hw1.Models
             set { _Id = value; }
         } private int _Id;
 
+        public string Name { get; set; }
+
         public int Disease { get; set; }
 
         public DateTime DiagnosisDate { get; set; }

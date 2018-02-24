@@ -18,7 +18,7 @@ namespace Rhyous.CS6210.Hw1.OutBreakAnalyzer.Arguments
     {
         public override void InitializeArguments(IArgsManager argsManager)
         {
-            Arguments.AddRange(CommonArguments.Create());
+            Arguments.AddRange(CommonArguments.Create("OutbreakAnalyzer", "5555"));
             Arguments.AddRange(new List<Argument>
             {
                 new Argument

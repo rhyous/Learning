@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="CommonArguments.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="NsQuery.cs" />
     <Compile Include="Packet.cs" />
     <Compile Include="CryptoRandom.cs" />
     <Compile Include="RegistrationClient.cs" />
