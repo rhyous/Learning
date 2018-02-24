@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Threading;
 
-namespace Rhyous.CS6210.Hw1.Simulator
+namespace Rhyous.CS6210.Hw1.Models
 {
     public class TimeSimulator
     {
@@ -60,7 +60,7 @@ namespace Rhyous.CS6210.Hw1.Simulator
         public DateTime EndDate { get; set; }
         public Action<DateTime> Action { get; set; }
 
-        internal void Wait()
+        public void Wait()
         {
             while (!_Shutdown && Current < EndDate)
             {

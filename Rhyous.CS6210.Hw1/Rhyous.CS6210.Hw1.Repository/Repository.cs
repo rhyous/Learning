@@ -36,6 +36,11 @@ namespace Rhyous.CS6210.Hw1.Repository
             return Context.Entities;
         }
 
+        public T Read(int id)
+        {
+            return Context.Entities.FirstOrDefault(e => e.Id == id);
+        }
+
         public T Update(T entity)
         {
             var existingEntity = Context.Entities.First(f => f.Id == entity.Id);
@@ -46,7 +51,7 @@ namespace Rhyous.CS6210.Hw1.Repository
             Context.SaveChanges();
             return existingEntity;
         }
-        
+
         #region IDisposable
 
         private bool _IsDisposed;

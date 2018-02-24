@@ -16,10 +16,11 @@ namespace Rhyous.CS6210.Hw1.LogServer.Tests
         public void TestLogServer()
         {
             // Arrange
-            var endpoint = "tcp://127.0.0.1:55010"; // Added an extra 0
+            var endpoint = "tcp://127.0.0.1:55010";
+            var nsEndpoint = "tcp://127.0.0.1:55020";
             var logList = new List<string>();
             var mockLog = new Mock<ILog>();
-            var loggerServer = new LoggerServer("Test Logger Server", mockLog.Object);
+            var loggerServer = new LoggerServer("Test Logger Server", mockLog.Object, nsEndpoint);
             mockLog.Setup(l => l.Debug(It.IsAny<object>())).Callback((object msg) => {
                 logList.Add(msg.ToString());
                 loggerServer.Stop();

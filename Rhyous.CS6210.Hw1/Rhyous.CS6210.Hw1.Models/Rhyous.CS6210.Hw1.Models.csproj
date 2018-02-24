@@ -32,6 +32,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Rhyous.SimpleArgs, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rhyous.SimpleArgs.2.0.0\lib\net40-client\Rhyous.SimpleArgs.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -45,7 +51,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommonArguments.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="Packet.cs" />
+    <Compile Include="CryptoRandom.cs" />
+    <Compile Include="RegistrationClient.cs" />
     <Compile Include="RequestClient.cs" />
     <Compile Include="PullServer.cs" />
     <Compile Include="Subscriber.cs" />
@@ -60,7 +70,7 @@
     <Compile Include="RequestSocketAdapter.cs" />
     <Compile Include="SendSocketServerAdapter.cs" />
     <Compile Include="PullSocketAdapter.cs" />
-    <Compile Include="VectorTimeStamp.cs" />
+    <Compile Include="TimeSimulator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

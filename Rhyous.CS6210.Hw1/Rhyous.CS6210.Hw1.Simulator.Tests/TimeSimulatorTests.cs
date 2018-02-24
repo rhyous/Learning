@@ -1,4 +1,5 @@
 ﻿using System;
+using Rhyous.CS6210.Hw1.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Rhyous.CS6210.Hw1.Simulator.Tests

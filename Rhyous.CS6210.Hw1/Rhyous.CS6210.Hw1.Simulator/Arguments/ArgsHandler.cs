@@ -1,9 +1,7 @@
+using Rhyous.CS6210.Hw1.Models;
 using Rhyous.SimpleArgs;
-using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Text.RegularExpressions;
-using ZeroMQ;
 
 namespace Rhyous.CS6210.Hw1.Simulator.Arguments
 {
@@ -20,24 +18,9 @@ namespace Rhyous.CS6210.Hw1.Simulator.Arguments
     {
         public override void InitializeArguments(IArgsManager argsManager)
         {
+            Arguments.AddRange(CommonArguments.Create());
             Arguments.AddRange(new List<Argument>
             {
-                new Argument
-                {
-                    Name = Constants.EndPoint,
-                    ShortName = "e",
-                    Description = "The endpoint for the server service.",
-                    Example = "{name}=tcp://127.0.0.1:5552",
-                    DefaultValue = "tcp://127.0.0.1:5552"
-                },
-                new Argument
-                {
-                    Name = Constants.Name,
-                    ShortName = "n",
-                    Description = "The name of this simulator.",
-                    DefaultValue = "Simulator1",
-                    Example = "{name}=Simulator1"
-                },
                 new Argument
                 {
                     Name = Constants.TimeMultiplier,
@@ -97,14 +80,6 @@ namespace Rhyous.CS6210.Hw1.Simulator.Arguments
                     {
                         return Regex.IsMatch(val, "[0]?[1-9]|[1-2][0-9]|[3][0-1]");
                     }
-                },
-                new Argument
-                {
-                    Name = Constants.LoggerEndpoint,
-                    ShortName = "L",
-                    Description = "The logger server endpoint.",
-                    Example = "{name}=tcp://127.0.0.1:5501",
-                    DefaultValue = "tcp://127.0.0.1:5501"
                 },
                 new ConfigFileArgument(argsManager)
             });

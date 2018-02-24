@@ -7,6 +7,7 @@ using System.Threading;
 using ZeroMQ;
 using Rhyous.CS6210.Hw1.LogClient;
 using Rhyous.CS6210.Hw1.Models;
+using System;
 
 namespace Rhyous.CS6210.Hw1.LogServer.Tests
 {
@@ -17,13 +18,15 @@ namespace Rhyous.CS6210.Hw1.LogServer.Tests
         public void TestLogServerFromClient()
         {
             // Arrange
-            var endpoint = "tcp://127.0.0.1:55011"; // Added an extra 1
+            var endpoint = "tcp://127.0.0.1:55011"; 
+            var nsEndpoint = "tcp://127.0.0.1:55021"; 
             var msgPushSocket = "This is a message from a PUSH zsocket.";
             var msgLogger = "This is a test message from the LoggerClient.";
             var clientName = "Test Client";
+            var systemRegistration = new SystemRegistration { Id = 1, Name = clientName };
             var logList = new List<string>();
             var mockLog = new Mock<ILog>();
-            var loggerServer = new LoggerServer("Test Logger Server", mockLog.Object);
+            var loggerServer = new LoggerServer("Test Logger Server", mockLog.Object, nsEndpoint);
             mockLog.Setup(l => l.Debug(It.IsAny<object>())).Callback((object msg) => {
                 logList.Add(msg.ToString());
                 if (logList.Count > 1)
@@ -38,7 +41,8 @@ namespace Rhyous.CS6210.Hw1.LogServer.Tests
             pushSocket.Connect(endpoint);
 
             var loggerClient = new LoggerClient(endpoint, clientName);
-            var vts = new VectorTimeStamp(0, 0, 0);
+            var vts = new VectorTimeStamp();
+            vts.Update(systemRegistration, DateTime.Now);
 
             // Act
             loggerClient.WriteLine(msgLogger, vts);

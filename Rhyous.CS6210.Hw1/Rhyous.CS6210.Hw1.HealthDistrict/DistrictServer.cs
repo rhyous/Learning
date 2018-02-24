@@ -11,8 +11,16 @@ namespace Rhyous.CS6210.Hw1.HealthDistrict
 {
     public class DistrictServer : SendServer
     {
+        internal SystemRegistration SystemRegistration = new SystemRegistration();
+        TimeSpan DateTimeOffset;
         public IRepository<Record> Repo = new Repository<Record>();
 
+        public DistrictServer(string name, TimeSpan dateTimeOffset)
+        {
+            SystemRegistration.Name = name;
+            DateTimeOffset = dateTimeOffset;
+        }
+        
         public void Start(string endpoint)
         {
             Start(endpoint, ZSocketType.REP, ReceiveAction);
@@ -26,10 +34,12 @@ namespace Rhyous.CS6210.Hw1.HealthDistrict
             var packet = JsonConvert.DeserializeObject<Packet<List<Record>>>(json);
             var records = packet.Payload;
             var addedRecords = Repo.Create(records);
-            var response = new Packet<List<Record>>();
-            response.Payload = addedRecords.ToList();
-            response.VectorTimeStamp = packet.VectorTimeStamp;
-            response.VectorTimeStamp.HealthDistrict++;
+            var response = new Packet<List<Record>>
+            {
+                Payload = addedRecords.ToList(),
+                VectorTimeStamp = packet.VectorTimeStamp
+            };
+            response.VectorTimeStamp.Update(SystemRegistration, DateTime.Now.Add(DateTimeOffset));
             var responseJson = JsonConvert.SerializeObject(response);
             Send(responseJson);
         }

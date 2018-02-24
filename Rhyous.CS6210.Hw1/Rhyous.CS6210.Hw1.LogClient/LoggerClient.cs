@@ -1,5 +1,6 @@
 ﻿using Rhyous.CS6210.Hw1.Interfaces;
 using Rhyous.CS6210.Hw1.Models;
+using System;
 using ZeroMQ;
 
 namespace Rhyous.CS6210.Hw1.LogClient
@@ -28,8 +29,13 @@ namespace Rhyous.CS6210.Hw1.LogClient
             }
             SendClient.Send($"{ClientName}: {message}");
         }
+        public void WriteLine(string message, SystemRegistration systemRegistration, DateTime? date = null)
+        {
+            var vts = new VectorTimeStamp().Update(systemRegistration, date ?? DateTime.Now);
+            WriteLine(message, vts);
+        }
 
-        public void WriteLine(string message, IVectorTimeStamp vts)
+        public void WriteLine(string message, VectorTimeStamp vts)
         {
             if (!IsConnected)
             {

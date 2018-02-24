@@ -20,7 +20,7 @@ namespace Rhyous.CS6210.Hw1.HealthDistrict.Tests
         public void DistrictServerStart()
         {
             // Arrange
-            var district = new DistrictServer();
+            var district = new DistrictServer("DS1", TimeSpan.Zero);
             var mockSocket = new Mock<IReplySocket>();
             mockSocket.Setup(s => s.Bind(It.IsAny<string>()));
             district.Socket = mockSocket.Object;
@@ -39,7 +39,7 @@ namespace Rhyous.CS6210.Hw1.HealthDistrict.Tests
         public void ReceiveActionCallsRepoCreate()
         {
             // Arrange
-            var district = new DistrictServer();
+            var district = new DistrictServer("DS1", TimeSpan.Zero);
             var records = new List<Record> { new Record { Id = 1, Disease = 0 } };
 
             var mockRepo = new Mock<IRepository<Record>>();
@@ -50,15 +50,17 @@ namespace Rhyous.CS6210.Hw1.HealthDistrict.Tests
             var mockSocket = new Mock<IReplySocket>();
             district.Socket = mockSocket.Object;
             Packet<List<Record>> responsePacket = null;
-            mockSocket.Setup(s => s.Send(It.IsAny<string>())).Callback((string sentJson)=> { responsePacket = JsonConvert.DeserializeObject<Packet<List<Record>>>(sentJson); });
+            mockSocket.Setup(s => s.Send(It.IsAny<string>())).Callback((string sentJson) => { responsePacket = JsonConvert.DeserializeObject<Packet<List<Record>>>(sentJson); });
 
-            var packet = new Packet<List<Record>>();
-            packet.Payload = records;
-            packet.VectorTimeStamp = new VectorTimeStamp(1,0,0);
+            var packet = new Packet<List<Record>>
+            {
+                Payload = records,
+                VectorTimeStamp = new VectorTimeStamp()
+            };
+            packet.VectorTimeStamp.Update(district.SystemRegistration, new DateTime(2018, 1, 1));
             var json = JsonConvert.SerializeObject(packet);
 
-            var frame = new ZFrame(json);
-            frame.Position = 0;
+            var frame = new ZFrame(json) { Position = 0 };
 
             // Act
             district.ReceiveAction(frame);
@@ -66,8 +68,6 @@ namespace Rhyous.CS6210.Hw1.HealthDistrict.Tests
             // Assert
             mockRepo.Verify(x => x.Create(It.IsAny<IEnumerable<Record>>()), Times.Once());
             mockSocket.Verify(x => x.Send(It.IsAny<string>()), Times.Once());
-            Assert.AreEqual(1, responsePacket.VectorTimeStamp.Simulator);
-            Assert.AreEqual(1, responsePacket.VectorTimeStamp.HealthDistrict);
         }
 
         #endregion
@@ -77,13 +77,13 @@ namespace Rhyous.CS6210.Hw1.HealthDistrict.Tests
         public void DistrictServerBindTest()
         {
             // Arrange
-            var district = new DistrictServer();
+            var district = new DistrictServer("DS1", TimeSpan.Zero);
             var mockRepo = new Mock<IRepository<Record>>();
             var list = new List<Record>();
             district.Repo = mockRepo.Object;
             var records = new List<Record> { new Record { Id = 1, Disease = 0, } };
             mockRepo.Setup(r => r.Create(It.IsAny<IEnumerable<Record>>()))
-                .Returns((IEnumerable<Record> values) => 
+                .Returns((IEnumerable<Record> values) =>
                 {
                     list.AddRange(values);
                     return values;
@@ -96,11 +96,13 @@ namespace Rhyous.CS6210.Hw1.HealthDistrict.Tests
             var socket = new ZSocket(ZSocketType.REQ);
             socket.Connect(endpoint);
 
-            var packet = new Packet<List<Record>>();
-            packet.Payload = records;
-            packet.VectorTimeStamp = new VectorTimeStamp(1, 0, 0);
-            packet.Sent = new DateTime(2018,1,1);
-
+            var packet = new Packet<List<Record>>
+            {
+                Payload = records,
+                VectorTimeStamp = new VectorTimeStamp(),
+                Sent = new DateTime(2018, 1, 1)
+            };
+            packet.VectorTimeStamp.Update(district.SystemRegistration, packet.Sent);
             var json = JsonConvert.SerializeObject(packet);
 
             // Act

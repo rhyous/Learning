@@ -1,6 +1,5 @@
 ﻿using log4net;
 using Rhyous.CS6210.Hw1.Models;
-using Rhyous.SimpleArgs;
 using System;
 using ZeroMQ;
 
@@ -11,9 +10,14 @@ namespace Rhyous.CS6210.Hw1.LogServer
         internal ILog Logger;
         internal string Endpoint;
         internal bool AlsoLogOnConsole;
-        public LoggerServer(string name, ILog logger) : base(name) { Logger = logger; }
+        public LoggerServer(string name, ILog logger, string nsEndpoint) : base(name, nsEndpoint)
+        {
+            Logger = logger;
+        }
+
         public void Start(string endpoint, bool alsoLogOnConsole)
-        {            
+        {
+            Register();
             Endpoint = endpoint;
             AlsoLogOnConsole = alsoLogOnConsole;
             Start(Endpoint, ReceiveAction);

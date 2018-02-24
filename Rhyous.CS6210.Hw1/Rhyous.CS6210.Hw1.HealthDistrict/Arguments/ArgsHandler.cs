@@ -1,6 +1,9 @@
+using Rhyous.CS6210.Hw1.Models;
 using Rhyous.SimpleArgs;
+using Rhyous.StringLibrary;
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace Rhyous.CS6210.Hw1.HealthDistrict.Arguments
 {
@@ -44,22 +47,14 @@ namespace Rhyous.CS6210.Hw1.HealthDistrict.Arguments
                     Description = "The endpoint name",
                     DefaultValue = "Health District 1",
                     Example = "{name}=Endpoint1"
-                },
-                new Argument
-                {
-                    Name = Constants.LoggerEndpoint,
-                    ShortName = "L",
-                    Description = "The logger server endpoint.",
-                    Example = "{name}=tcp://127.0.0.1:5501",
-                    DefaultValue = "tcp://127.0.0.1:5501",
-                    Action = (value) => { Console.WriteLine(value); }
                 }
             });
         }
 
         public override void HandleArgs(IReadArgs inArgsHandler)
         {
-            Starter.Start();
+            var timespan = new TimeSpan(Args.Value(Constants.DateTimeOffset).To(0));
+            Starter.Start(timespan);
         }
     }
 }

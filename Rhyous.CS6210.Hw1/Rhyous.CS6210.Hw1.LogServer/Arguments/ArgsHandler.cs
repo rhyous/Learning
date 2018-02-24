@@ -1,3 +1,4 @@
+using Rhyous.CS6210.Hw1.Models;
 using Rhyous.SimpleArgs;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,7 @@ namespace Rhyous.CS6210.Hw1.LogServer
             {
                 new Argument
                 {
-                    Name = Constants.LoggerEndpoint,
+                    Name = Constants.Endpoint,
                     ShortName = "e",
                     Description = "The logger endpoint.",
                     Example = "{name}=tcp://127.0.0.1:5501",

@@ -4,14 +4,16 @@ using ZeroMQ;
 
 namespace Rhyous.CS6210.Hw1.Models
 {
-    public class PullServer : IServer<ZFrame>, IDisposable, IName
+    public class PullServer : RegistrationClient, IServer<ZFrame>, IDisposable, IName
     {
         public virtual ZContext Context { get; set; }
         public virtual IPullSocket Socket { get; set; }
         public string Name { get; internal set; }
-
-        public PullServer() { }
-        public PullServer(string name) { Name = name; }
+        
+        public PullServer(string name, string nsEndpoint) : base(nsEndpoint, new SystemRegistration { Name = name })
+        {
+            Name = name;
+        }
 
         public void Start(string endpoint, Action<ZFrame> receiveAction)
         {

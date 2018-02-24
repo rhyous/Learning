@@ -29,7 +29,7 @@ namespace Rhyous.CS6210.Hw1.HealthDistrict.Tests
 
             // Act
             var task = Task.Run(() => { subscriber.Connect(""); });
-            Thread.Sleep(200);
+            Thread.Sleep(300);
 
             // Assert
             mockSocket.Verify(s => s.Connect(It.IsAny<string>()), Times.Once());

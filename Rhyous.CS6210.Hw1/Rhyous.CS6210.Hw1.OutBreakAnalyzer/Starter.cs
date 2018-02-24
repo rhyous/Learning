@@ -1,5 +1,6 @@
 ﻿using Rhyous.CS6210.Hw1.Interfaces;
 using Rhyous.CS6210.Hw1.LogClient;
+using Rhyous.CS6210.Hw1.Models;
 using Rhyous.SimpleArgs;
 using System;
 using System.Threading.Tasks;

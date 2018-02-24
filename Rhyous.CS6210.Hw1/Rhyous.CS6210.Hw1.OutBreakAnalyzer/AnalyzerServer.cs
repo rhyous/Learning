@@ -9,16 +9,27 @@ namespace Rhyous.CS6210.Hw1.OutBreakAnalyzer
     public class AnalyzerServer : SendServer, IName
     {
         internal ILogger Logger;
-        public AnalyzerServer(string name, ILogger logger) { Name = name; Logger = logger; }
 
         public IRepository<Record> Repo = new Repository<Record>();
+        internal SystemRegistration SystemRegistration = new SystemRegistration();
 
-        public string Name {get;}
+        public AnalyzerServer(string name, ILogger logger)
+        {
+            Name = name;
+            Logger = logger;
+
+        }
+
+        public string Name
+        {
+            get { return SystemRegistration.Name; }
+            internal set { SystemRegistration.Name = value; }
+        }
 
         public void Start(string endpoint)
         {
             var socketType = ZSocketType.PULL;
-            Logger.WriteLine($"Starting {Name} on {endpoint}.", new VectorTimeStamp(0,0,1));
+            Logger.WriteLine($"Starting {Name} on {endpoint}.", new VectorTimeStamp());
             Start(endpoint, socketType, ReceiveAction);
         }
 
