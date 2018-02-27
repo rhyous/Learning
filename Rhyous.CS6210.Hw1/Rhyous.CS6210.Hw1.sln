@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2027
+VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhyous.CS6210.Hw1.Models", "Rhyous.CS6210.Hw1.Models\Rhyous.CS6210.Hw1.Models.csproj", "{4449AA76-52EC-4EC5-A836-8650A1846783}"
 EndProject
@@ -51,6 +51,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhyous.CS6210.Hw1.NameServer.Tests", "Rhyous.CS6210.Hw1.NameServer.Tests\Rhyous.CS6210.Hw1.NameServer.Tests.csproj", "{501B6909-B056-43DB-A4D1-9847FBE34ED8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rhyous.CS6210.Hw1.ModelTests", "Rhyous.CS6210.Hw1.ModelTests\Rhyous.CS6210.Hw1.ModelTests.csproj", "{713F0650-AFAB-4735-B842-EC160728C9E1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AWS", "AWS", "{0B4FEED6-518E-423B-92BB-CAA3AA441776}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rhyous.CS6210.Hw1.InstanceLauncher", "Rhyous.CS6210.Hw1.InstanceLauncher\Rhyous.CS6210.Hw1.InstanceLauncher.csproj", "{DA8CA001-0AFE-4FE0-AA1B-5DF25FBCD48E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -118,6 +122,10 @@ Global
 		{713F0650-AFAB-4735-B842-EC160728C9E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{713F0650-AFAB-4735-B842-EC160728C9E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{713F0650-AFAB-4735-B842-EC160728C9E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA8CA001-0AFE-4FE0-AA1B-5DF25FBCD48E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA8CA001-0AFE-4FE0-AA1B-5DF25FBCD48E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA8CA001-0AFE-4FE0-AA1B-5DF25FBCD48E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA8CA001-0AFE-4FE0-AA1B-5DF25FBCD48E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -130,6 +138,7 @@ Global
 		{53221117-D32D-4701-AF78-AF0C688F7B51} = {22A87F90-F731-4A55-95E4-E5CD487C9908}
 		{C8540D16-2E60-40D7-9052-2D3AF378AFCB} = {22A87F90-F731-4A55-95E4-E5CD487C9908}
 		{713F0650-AFAB-4735-B842-EC160728C9E1} = {9594CEDD-B798-4CE9-9F91-6F5886A73BED}
+		{DA8CA001-0AFE-4FE0-AA1B-5DF25FBCD48E} = {0B4FEED6-518E-423B-92BB-CAA3AA441776}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {690C4168-C09F-49A7-B737-E72C766A98BE}

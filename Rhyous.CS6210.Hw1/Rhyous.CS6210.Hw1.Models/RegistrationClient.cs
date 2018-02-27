@@ -25,8 +25,7 @@ namespace Rhyous.CS6210.Hw1.Models
                 return false;
             RegClient.Connect(nsEndpoint, ZeroMQ.ZSocketType.REQ);
 
-            var packet = new Packet<SystemRegistration>();
-            packet.Payload = SystemRegistration;
+            var packet = new Packet<SystemRegistration> { Payload = SystemRegistration };
             var json = JsonConvert.SerializeObject(packet);
             return IsConnected;
         }
