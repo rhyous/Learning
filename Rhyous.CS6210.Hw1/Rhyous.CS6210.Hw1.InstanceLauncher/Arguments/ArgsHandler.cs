@@ -4,6 +4,8 @@ using Rhyous.SimpleArgs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Configuration;
+using System.IO;
 using System.Reflection;
 
 namespace Rhyous.CS6210.Hw1.InstanceLauncher
@@ -27,36 +29,10 @@ namespace Rhyous.CS6210.Hw1.InstanceLauncher
             {
                 new Argument
                 {
-                    Name = "SecretAccessKey",
-                    ShortName = "s",
-                    Description = "The secret access key provided to you by Amazon.",
-                    Example = "{name}=RvOxT8JLRL8P57oEvJYfqVr0YcoQb7Xo0CN2YcBvL", // Fake key I made up
-                    Action = (value) => 
-                    {
-                        Log.Debug(value);
-                    }
-                },
-                new Argument
-                {
-                    Name = "Action",
-                    ShortName = "a",
-                    Description = "The action to run.",
-                    Example = "{name}=default",
-                    DefaultValue = "Default",
-                    AllowedValues = new ObservableCollection<string>
-                    {
-                        "Default",
-                        "CreateInstance",
-                        "StopInstance",
-                        "TerminateInstance",
-                        "CreateBucket",
-                        "DeleteBucket",
-                        "UploadFile",
-                        "ListFiles",
-                        "CreateKeyPair",
-                        "DeleteKeyPair"
-                    },
-                    IsRequired = true,
+                    Name = "AccessKey",
+                    ShortName = "ak",
+                    Description = "The access access key provided to you by Amazon.",
+                    Example = "{name}=AKA7PXD3H7MN2AWZSR9", // Fake key I made up
                     Action = (value) =>
                     {
                         Log.Debug(value);
@@ -64,7 +40,18 @@ namespace Rhyous.CS6210.Hw1.InstanceLauncher
                 },
                 new Argument
                 {
-                    Name = "Image",
+                    Name = "SecretKey",
+                    ShortName = "sk",
+                    Description = "The secret access key provided to you by Amazon.",
+                    Example = "{name}=RvOxT8JLRL8P57oEvJYfqVr0YcoQb7Xo0CN2YcBvL", // Fake key I made up
+                    Action = (value) =>
+                    {
+                        Log.Debug(value);
+                    }
+                },
+                new Argument
+                {
+                    Name = "ImageId",
                     ShortName = "i",
                     Description = "The operating system image to use. From the ImageUtilities class.",
                     Example = "{name}=WINDOWS_2012_BASE",
@@ -93,6 +80,18 @@ namespace Rhyous.CS6210.Hw1.InstanceLauncher
                     ShortName = "id",
                     Description = "The instance id to use.",
                     Example = "{name}=1",
+                    Action = (value) =>
+                    {
+                        Log.Debug(value);
+                    }
+                },
+                new Argument
+                {
+                    Name = "InstanceName",
+                    ShortName = "n",
+                    Description = "The instance name to use.",
+                    Example = "{name}=MyServer1",
+                    DefaultValue = "",
                     Action = (value) =>
                     {
                         Log.Debug(value);
@@ -153,6 +152,73 @@ namespace Rhyous.CS6210.Hw1.InstanceLauncher
                     {
                         Log.Debug(value);
                     }
+                },
+                new Argument
+                {
+                    Name = "LocalDirectory",
+                    ShortName = "ld",
+                    Description = "The local directory to copy to S3.",
+                    Example = "{name}=C:\\TestDir",
+                    Action = (value) =>
+                    {
+                        Log.Debug(value);
+                    }
+                },
+                new Argument
+                {
+                    Name = "RemoteDirectory",
+                    ShortName = "rd",
+                    Description = "The remote directory on the S3 Bucket.",
+                    Example = "{name}=/My/Remote/Directory",
+                    Action = (value) =>
+                    {
+                        Log.Debug(value);
+                    }
+                },
+                new Argument
+                {
+                    Name = "InstanceDirectory",
+                    ShortName = "idir",
+                    Description = "The directory local to the instance server.",
+                    Example = "{name}=C:\\TestDir",
+                    Action = (value) =>
+                    {
+                        Log.Debug(value);
+                    }
+                },
+                new Argument
+                {
+                    Name = "LaunchScript",
+                    ShortName = "script",
+                    Description = "A powershell script to run at instance launch.The local directory to copy to S3.",
+                    Example = "{name}=C:\\MyDir\\MyScript.ps1",
+                    CustomValidation = (value) => File.Exists(value),
+                    Action = (value) =>
+                    {
+                        Log.Debug(value);
+                    }
+                },
+                new Argument
+                {
+                    Name = "Region",
+                    Description = "The region",
+                    Example = "{name}=us-west-2",
+                    DefaultValue = ConfigurationManager.AppSettings["AWSRegion"],
+                    Action = (value) =>
+                    {
+                        Log.Debug(value);
+                    }
+                },
+                new Argument
+                {
+                    Name = "SkipSteps",
+                    ShortName = "skip",
+                    Description = "Steps to skip in a comma separated list.",
+                    Example = "{name}=UploadFiles,StartInstance",
+                    Action = (value) =>
+                    {
+                        Log.Debug(value);
+                    }
                 }
             });
         }
@@ -160,7 +226,8 @@ namespace Rhyous.CS6210.Hw1.InstanceLauncher
         public override void HandleArgs(IReadArgs inArgsHandler)
         {
             base.HandleArgs(inArgsHandler);
-            Program.Start();
+            var task = Program.Start();
+            task.Wait();
         }
     }
 }

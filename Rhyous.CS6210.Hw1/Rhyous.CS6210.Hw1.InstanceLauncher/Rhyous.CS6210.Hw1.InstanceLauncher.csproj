@@ -6,11 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AWSSDK.EC2" Version="3.3.19" />
-    <PackageReference Include="AWSSDK.S3" Version="3.3.9" />
-    <PackageReference Include="AWSSDK.IdentityManagement" Version="3.3.4.3" />
+    <PackageReference Include="AWSSDK.EC2" Version="3.3.47.1" />
+    <PackageReference Include="AWSSDK.S3" Version="3.3.17.1" />
+    <PackageReference Include="AWSSDK.IdentityManagement" Version="3.3.5.4" />
     <PackageReference Include="log4net" Version="2.0.8" />
     <PackageReference Include="Rhyous.SimpleArgs" Version="2.0.0" />
+    <PackageReference Include="Rhyous.StringLibrary" Version="1.1.1" />
   </ItemGroup>
 
   <ItemGroup>

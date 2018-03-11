@@ -1,43 +1,26 @@
-﻿/*******************************************************************************
-* Copyright 2009-2018 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-* 
-* Licensed under the Apache License, Version 2.0 (the "License"). You may
-* not use this file except in compliance with the License. A copy of the
-* License is located at
-* 
-* http://aws.amazon.com/apache2.0/
-* 
-* or in the "license" file accompanying this file. This file is
-* distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-* KIND, either express or implied. See the License for the specific
-* language governing permissions and limitations under the License.
-*******************************************************************************/
-
-using Amazon.Auth.AccessControlPolicy;
-using Amazon.Auth.AccessControlPolicy.ActionIdentifiers;
+﻿using Amazon;
 using Amazon.EC2;
-using Amazon.EC2.Model;
-using Amazon.EC2.Util;
-using Amazon.IdentityManagement;
-using Amazon.IdentityManagement.Model;
+using Amazon.Runtime;
+using Amazon.S3;
+using Amazon.S3.Transfer;
 using log4net;
+using Rhyous.AmazonEc2InstanceManager;
+using Rhyous.AmazonS3BucketManager;
 using Rhyous.SimpleArgs;
-using System.Collections.Generic;
+using System;
+using System.Configuration;
+using System.IO;
+using System.Linq;
 using System.Reflection;
-using System.Threading;
-using Statement = Amazon.Auth.AccessControlPolicy.Statement;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace Rhyous.CS6210.Hw1.InstanceLauncher
 {
-
-    /// <summary>
-    /// This sample shows how to launch an Amazon EC2 instance with a PowerShell script that is executed when the 
-    /// instance becomes available and access Amazon S3.
-    /// </summary>
     class Program
     {
         static ILog Log = LogManager.GetLogger(Assembly.GetExecutingAssembly().Location + ".log");
-
 
         public static void Main(string[] args)
         {
@@ -46,36 +29,38 @@ namespace Rhyous.CS6210.Hw1.InstanceLauncher
             new ArgsManager<ArgsHandler>().Start(args);
         }
 
-        internal static void Start()
+        internal static async Task Start()
         {
-            var action = Args.Value("Action");
-            var flags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy;
-            MethodInfo mi = typeof(AwsActions).GetMethod(action, flags);
-            switch (mi.GetParameters().Length)
+            var region = RegionEndpoint.GetBySystemName(ConfigurationManager.AppSettings["AWSRegion"]);
+            var e2client = new AmazonEC2Client(Args.Value("AccessKey"), Args.Value("SecretKey"), region);
+            var s3client = new AmazonS3Client(Args.Value("AccessKey"), Args.Value("SecretKey"), region);
+            var transferUtility = new TransferUtility(Args.Value("AccessKey"), Args.Value("SecretKey"), region);
+
+            // Sync files
+            var bucket = Args.Value("bucket");
+
+            // Create bucket
+            var bucketExists = (await s3client.ListBucketsAsync()).Buckets.Any(b => b.BucketName == bucket);
+            if (!bucketExists)
+                await BucketManager.CreateBucketAsync(s3client, bucket);
+
+            // Upload files to bucket
+            if (!Args.Value("Skip").Split(',').Any(v=>v=="UploadFiles"))
+                await BucketManager.UploadFilesAsync(transferUtility, bucket, Args.Value("LocalDirectory"));
+
+            // Get launch script
+            var scriptText = File.ReadAllText(Args.Value("LaunchScript"));
+            var matches = Regex.Matches(scriptText, "\"{[^}]+}\"");
+            foreach (Match match in matches)
             {
-                case 0:
-                    mi.Invoke(null, null);
-                    break;
-                case 1:
-                    mi.Invoke(null, new[] { new AmazonEC2Client() });
-                    break;
+                scriptText = scriptText.Replace(match.Value.Trim(new[] { '"'}), Args.Value(match.Value.Trim(new[] { '{', '}', '"' })));
             }
-        }
+            scriptText = $"<powershell>\n{scriptText}\n</powershell>";
 
-        public static void TerminateInstance(AmazonEC2Client ec2Client)
-        {
-            var bucketName = Args.Value("Bucket");
-            var instanceId = Args.Value("InstanceId");
-            var keyPair = new KeyPair();
+            var scriptAsBase64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(scriptText));
 
-            // Terminate instance
-            ec2Client.TerminateInstances(new TerminateInstancesRequest
-            {
-                InstanceIds = new List<string>() { instanceId }
-            });
-
-            // Delete key pair created for sample.
-            ec2Client.DeleteKeyPair(new DeleteKeyPairRequest { KeyName = keyPair.KeyName });
+            // Start instance
+            var keyPair = await InstanceManager.CreateInstance(e2client, Args.Value("ImageId"), Args.Value("KeyName"), Args.Value("InstanceName"), scriptAsBase64);
         }
     }
 }
