@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Threading;
 using ZeroMQ;
+using Rhyous.CS6210.Hw1.Interfaces;
 
 namespace Rhyous.CS6210.Hw1.LogServer.Tests
 {
@@ -19,14 +20,14 @@ namespace Rhyous.CS6210.Hw1.LogServer.Tests
             var endpoint = "tcp://127.0.0.1:55010";
             var nsEndpoint = "tcp://127.0.0.1:55020";
             var logList = new List<string>();
-            var mockLog = new Mock<ILog>();
-            var loggerServer = new LoggerServer("Test Logger Server", mockLog.Object, nsEndpoint);
-            mockLog.Setup(l => l.Debug(It.IsAny<object>())).Callback((object msg) => {
-                logList.Add(msg.ToString());
+            var mockLog = new Mock<ILogger>();
+            var loggerServer = new LoggerServer("Test Logger Server", endpoint, nsEndpoint, mockLog.Object);
+            mockLog.Setup(l => l.WriteLine(It.IsAny<string>())).Callback((string msg) => {
+                logList.Add(msg);
                 loggerServer.Stop();
             });
         
-            var task = Task.Run(() => loggerServer.Start(endpoint, true));
+            var task = Task.Run(() => loggerServer.StartAsync(endpoint));
             Thread.Sleep(300);
                        
             var pushContext = new ZContext();

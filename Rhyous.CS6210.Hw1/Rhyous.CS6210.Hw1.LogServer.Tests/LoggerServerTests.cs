@@ -8,6 +8,7 @@ using ZeroMQ;
 using Rhyous.CS6210.Hw1.LogClient;
 using Rhyous.CS6210.Hw1.Models;
 using System;
+using Rhyous.CS6210.Hw1.Interfaces;
 
 namespace Rhyous.CS6210.Hw1.LogServer.Tests
 {
@@ -23,17 +24,17 @@ namespace Rhyous.CS6210.Hw1.LogServer.Tests
             var msgPushSocket = "This is a message from a PUSH zsocket.";
             var msgLogger = "This is a test message from the LoggerClient.";
             var clientName = "Test Client";
-            var systemRegistration = new SystemRegistration { Id = 1, Name = clientName };
+            var systemRegistration = new SystemRegistration(clientName, endpoint) { Id = 1 };
             var logList = new List<string>();
-            var mockLog = new Mock<ILog>();
-            var loggerServer = new LoggerServer("Test Logger Server", mockLog.Object, nsEndpoint);
-            mockLog.Setup(l => l.Debug(It.IsAny<object>())).Callback((object msg) => {
-                logList.Add(msg.ToString());
+            var mockLog = new Mock<ILogger>();
+            var loggerServer = new LoggerServer("Test Logger Server", endpoint, nsEndpoint, mockLog.Object);
+            mockLog.Setup(l => l.WriteLine(It.IsAny<string>())).Callback((string msg) => {
+                logList.Add(msg);
                 if (logList.Count > 1)
                     loggerServer.Stop();
             });
         
-            var task = Task.Run(() => loggerServer.Start(endpoint, true));
+            var task = Task.Run(() => loggerServer.StartAsync(endpoint));
             Thread.Sleep(300);
                        
             var pushContext = new ZContext();
@@ -42,7 +43,7 @@ namespace Rhyous.CS6210.Hw1.LogServer.Tests
 
             var loggerClient = new LoggerClient(endpoint, clientName);
             var vts = new VectorTimeStamp();
-            vts.Update(systemRegistration, DateTime.Now);
+            vts.Update(systemRegistration.Id, DateTime.Now);
 
             // Act
             loggerClient.WriteLine(msgLogger, vts);

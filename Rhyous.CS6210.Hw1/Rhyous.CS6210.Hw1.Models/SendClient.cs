@@ -1,10 +1,11 @@
 ﻿using Rhyous.CS6210.Hw1.Interfaces;
 using System;
+using System.Threading.Tasks;
 using ZeroMQ;
 
 namespace Rhyous.CS6210.Hw1.Models
 {
-    public class SendClient : ISend, IDisposable
+    public class SendClient : ISendAsync, IDisposable
     {
         public ZContext Context { get; set; }
         public IRequestSocket Socket { get; set; }
@@ -16,9 +17,14 @@ namespace Rhyous.CS6210.Hw1.Models
             Socket.Connect(endpoint);
         }
         
-        public virtual void Send(string message)
+        public virtual async Task SendAsync(string message)
         {
-            Socket.Send(message);           
+            await Socket.SendAsync(message);          
+        }
+
+        public virtual async Task SendAsync(string message, Action<ZFrame> receiveAction)
+        {
+            await Socket.SendAsync(message, receiveAction);
         }
 
         #region IDisposable

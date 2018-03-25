@@ -3,7 +3,7 @@ cd "$PSScriptRoot"
 
 # Start Name server
 $endpointNameServer="tcp://127.0.0.1:6001"
-Start-Process .\LogServer\Rhyous.CS6210.Hw1.Logger.exe -ArgumentList "-e=$($endpointNameServer)"
+Start-Process .\NameServer\Rhyous.CS6210.Hw1.NameServer.exe -ArgumentList "-e=$($endpointNameServer)"
 
 
 # Start log server

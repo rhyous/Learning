@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Rhyous.CS6210.Hw1.Interfaces;
 using ZeroMQ;
 
@@ -26,14 +27,14 @@ namespace Rhyous.CS6210.Hw1.Models
             return Socket.ReceiveFrame();
         }
         
-        public void Send(string message)
+        public async Task SendAsync(string message)
         {
-            Socket.Send(new ZFrame(message));
+            await Task.Run(() => { Socket.Send(new ZFrame(message)); });
         }
 
-        public void Send(string message, Action<ZFrame> receiveAction)
+        public async Task SendAsync(string message, Action<ZFrame> receiveAction)
         {
-            Send(message);
+            await SendAsync(message);
             using (ZFrame reply = ReceiveFrame())
             {
                 receiveAction(reply);

@@ -2,6 +2,7 @@ using Rhyous.CS6210.Hw1.Models;
 using Rhyous.SimpleArgs;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Rhyous.CS6210.Hw1.NameServer.Arguments
 {
@@ -39,7 +40,11 @@ namespace Rhyous.CS6210.Hw1.NameServer.Arguments
         public override void HandleArgs(IReadArgs inArgsHandler)
         {
             base.HandleArgs(inArgsHandler);
-            Starter.Start();
+            var task = Starter.StartAsync(Args.Value(Constants.Name),
+                                          Args.Value(Constants.Endpoint),
+                                          Args.Value(Constants.LoggerEndpoint)
+                                         );
+            task.Wait();
         }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Rhyous.CS6210.Hw1.Interfaces
 {
-    public interface ISendSocketServer : ISend, IDisposable, IBind
+    public interface ISendSocketServer : ISendAsync, IDisposable, IBind
     {
     }
 }

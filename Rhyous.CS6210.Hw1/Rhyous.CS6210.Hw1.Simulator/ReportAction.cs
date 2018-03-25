@@ -51,7 +51,7 @@ namespace Rhyous.CS6210.Hw1.Simulator
             var frame = new ZFrame(json);
             Console.WriteLine("Sent: ");
             Console.WriteLine(json);
-            DiseaseSimulatorClient.Client.Send(json, DiseaseSimulatorClient.ReceiveAction);
+            DiseaseSimulatorClient.Client.SendAsync(json, DiseaseSimulatorClient.ReceiveAction);
         }
     }
 }

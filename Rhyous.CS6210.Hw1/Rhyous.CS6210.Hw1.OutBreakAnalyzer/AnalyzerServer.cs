@@ -2,6 +2,7 @@
 using Rhyous.CS6210.Hw1.Interfaces;
 using Rhyous.CS6210.Hw1.Models;
 using Rhyous.CS6210.Hw1.Repository;
+using System.Threading.Tasks;
 using ZeroMQ;
 
 namespace Rhyous.CS6210.Hw1.OutBreakAnalyzer
@@ -11,10 +12,11 @@ namespace Rhyous.CS6210.Hw1.OutBreakAnalyzer
         internal ILogger Logger;
 
         public IRepository<Record> Repo = new Repository<Record>();
-        internal SystemRegistration SystemRegistration = new SystemRegistration();
+        internal SystemRegistration SystemRegistration;
 
         public AnalyzerServer(string name, ILogger logger)
         {
+            SystemRegistration = new SystemRegistration(name);
             Name = name;
             Logger = logger;
 
@@ -26,11 +28,11 @@ namespace Rhyous.CS6210.Hw1.OutBreakAnalyzer
             internal set { SystemRegistration.Name = value; }
         }
 
-        public void Start(string endpoint)
+        public async Task StartAsync(string endpoint)
         {
             var socketType = ZSocketType.PULL;
             Logger.WriteLine($"Starting {Name} on {endpoint}.", new VectorTimeStamp());
-            Start(endpoint, socketType, ReceiveAction);
+            await StartAsync(endpoint, socketType, ReceiveAction);
         }
 
         internal void ReceiveAction(ZFrame frame)

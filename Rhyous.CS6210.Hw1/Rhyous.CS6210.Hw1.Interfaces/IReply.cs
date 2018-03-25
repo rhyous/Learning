@@ -1,7 +1,9 @@
-﻿namespace Rhyous.CS6210.Hw1.Interfaces
+﻿using System.Threading.Tasks;
+
+namespace Rhyous.CS6210.Hw1.Interfaces
 {
     public interface IReply
     {
-        void Reply(string message);
+        Task ReplyAsync(string message);
     }
 }

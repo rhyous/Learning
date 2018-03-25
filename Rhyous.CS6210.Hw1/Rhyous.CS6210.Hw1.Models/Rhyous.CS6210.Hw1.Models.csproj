@@ -33,13 +33,18 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Rhyous.SimpleArgs, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Rhyous.SimpleArgs.2.0.0\lib\net40-client\Rhyous.SimpleArgs.dll</HintPath>
     </Reference>
+    <Reference Include="Rhyous.StringLibrary, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rhyous.StringLibrary.1.1.2\lib\net461\Rhyous.StringLibrary.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -51,11 +56,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Awaiter.cs" />
     <Compile Include="CommonArguments.cs" />
+    <Compile Include="ConsoleLogger.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="Extensions\EndpointEntensions.cs" />
+    <Compile Include="Interfaces\ILogger.cs" />
+    <Compile Include="IpAddress.cs" />
+    <Compile Include="MultiLogger.cs" />
     <Compile Include="NsQuery.cs" />
     <Compile Include="Packet.cs" />
     <Compile Include="CryptoRandom.cs" />
+    <Compile Include="Protocol.cs" />
     <Compile Include="RegistrationClient.cs" />
     <Compile Include="RequestClient.cs" />
     <Compile Include="PullServer.cs" />
@@ -71,7 +83,10 @@
     <Compile Include="RequestSocketAdapter.cs" />
     <Compile Include="SendSocketServerAdapter.cs" />
     <Compile Include="PullSocketAdapter.cs" />
+    <Compile Include="SystemRegistration.cs" />
     <Compile Include="TimeSimulator.cs" />
+    <Compile Include="VectorCounter.cs" />
+    <Compile Include="VectorTimeStamp.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

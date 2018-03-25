@@ -1,31 +1,37 @@
 ﻿using Rhyous.CS6210.Hw1.Interfaces;
 using System;
+using System.Threading.Tasks;
 using ZeroMQ;
 
 namespace Rhyous.CS6210.Hw1.Models
 {
-    public class SendServer : IServer<ZFrame>, ISend, IDisposable
+    public class SendServer : IServer<ZFrame>, ISendAsync, IDisposable
     {
         public ZContext Context { get; set; }
         public IReplySocket Socket { get; set; }
+        public bool IsStarted { get; internal set; }
 
-        public virtual void Start(string endpoint, ZSocketType type, Action<ZFrame> receiveAction)
+        public virtual async Task StartAsync(string endpoint, ZSocketType type, Action<ZFrame> receiveAction)
         {            
             Context = Context ?? new ZContext();
             Socket = Socket ?? new SendSocketServerAdapter(new ZSocket(Context, type));
             Socket.Bind(endpoint);
             while (!_IsDisposed)
             {
-                OpenReceive(receiveAction);
+                await OpenReceiveAsync(receiveAction);
             }
         }
 
-        internal void OpenReceive(Action<ZFrame> receiveAction)
+        internal async Task OpenReceiveAsync(Action<ZFrame> receiveAction)
         {
-            using (ZFrame request = Socket.ReceiveFrame())
+            IsStarted = true;
+            await Task.Run(() =>
             {
-                receiveAction?.Invoke(request);
-            }
+                using (ZFrame request = Socket.ReceiveFrame())
+                {
+                    receiveAction?.Invoke(request);
+                }
+            });
         }
 
         public virtual void Stop()
@@ -33,9 +39,9 @@ namespace Rhyous.CS6210.Hw1.Models
             Dispose();
         }
 
-        public virtual void Send(string message)
+        public virtual async Task SendAsync(string message)
         {
-            Socket.Send(message);
+            await Socket.SendAsync(message);
         }
 
         #region IDisposable

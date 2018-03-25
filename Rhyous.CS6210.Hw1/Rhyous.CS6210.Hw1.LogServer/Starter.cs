@@ -1,24 +1,26 @@
-﻿using Rhyous.CS6210.Hw1.Interfaces;
-using Rhyous.CS6210.Hw1.LogClient;
+﻿using log4net;
+using Rhyous.CS6210.Hw1.Interfaces;
 using Rhyous.CS6210.Hw1.Models;
-using Rhyous.SimpleArgs;
+using System.Threading.Tasks;
 
 namespace Rhyous.CS6210.Hw1.LogServer
 {
     internal class Starter
     {
         internal static ILogger Logger;
-        internal static void Start()
+        public static LoggerServer LS { get; set; }
+        internal static async Task StartAsync(string name, string endpoint, string nsEndpoint, ILog log, bool alsoLogToConsole)
         {
-            var name = Args.Value(Constants.Name);
-            var endpoint = Args.Value(Constants.Endpoint);
-            var nsEndpoint = Args.Value(Constants.NameServerEndpoint);
-            Logger = new LoggerClient(endpoint, name);
+            Logger = new Log4NetLogger(log);
+            if (alsoLogToConsole)
+                Logger = new MultiLogger(Logger, new ConsoleLogger());
             Logger.WriteLine($"{name} has started.");
 
-            LogConfigurator.Configure(Args.Value(Constants.File));
-            var logServer = new LoggerServer(Args.Value(Constants.Name), LogConfigurator.Log, nsEndpoint);
-            logServer.Start(endpoint, Args.Value(Constants.AlsoLogOnConsole).AsBool());
+            LS = new LoggerServer(name, endpoint, nsEndpoint, Logger);
+            await LS.RegisterAsync(LS.VTS, endpoint);
+            while (!LS.IsRegistered)
+            { }
+            await LS.StartAsync(endpoint);
         }
     }
 }

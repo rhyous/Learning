@@ -50,11 +50,16 @@
   <ItemGroup>
     <Compile Include="RandomTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="EndpointExtensionTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Rhyous.CS6210.Hw1.Interfaces\Rhyous.CS6210.Hw1.Interfaces.csproj">
+      <Project>{D4770CDE-7A69-4399-81EC-E64B7256A8C5}</Project>
+      <Name>Rhyous.CS6210.Hw1.Interfaces</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Rhyous.CS6210.Hw1.Models\Rhyous.CS6210.Hw1.Models.csproj">
       <Project>{4449aa76-52ec-4ec5-a836-8650a1846783}</Project>
       <Name>Rhyous.CS6210.Hw1.Models</Name>

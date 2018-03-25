@@ -26,7 +26,7 @@ namespace Rhyous.CS6210.Hw1.HealthDistrict.Tests
             district.Socket = mockSocket.Object;
 
             // Act
-            var task = Task.Run(() => { district.Start("", ZSocketType.REP, null); });
+            var task = district.StartAsync("", ZSocketType.REP, null);
             Thread.Sleep(200);
             district.Stop();
 
@@ -50,14 +50,14 @@ namespace Rhyous.CS6210.Hw1.HealthDistrict.Tests
             var mockSocket = new Mock<IReplySocket>();
             district.Socket = mockSocket.Object;
             Packet<List<Record>> responsePacket = null;
-            mockSocket.Setup(s => s.Send(It.IsAny<string>())).Callback((string sentJson) => { responsePacket = JsonConvert.DeserializeObject<Packet<List<Record>>>(sentJson); });
+            mockSocket.Setup(s => s.SendAsync(It.IsAny<string>())).Callback((string sentJson) => { responsePacket = JsonConvert.DeserializeObject<Packet<List<Record>>>(sentJson); });
 
             var packet = new Packet<List<Record>>
             {
                 Payload = records,
                 VectorTimeStamp = new VectorTimeStamp()
             };
-            packet.VectorTimeStamp.Update(district.SystemRegistration, new DateTime(2018, 1, 1));
+            packet.VectorTimeStamp.Update(district.SystemRegistration.Id, new DateTime(2018, 1, 1));
             var json = JsonConvert.SerializeObject(packet);
 
             var frame = new ZFrame(json) { Position = 0 };
@@ -67,7 +67,7 @@ namespace Rhyous.CS6210.Hw1.HealthDistrict.Tests
 
             // Assert
             mockRepo.Verify(x => x.Create(It.IsAny<IEnumerable<Record>>()), Times.Once());
-            mockSocket.Verify(x => x.Send(It.IsAny<string>()), Times.Once());
+            mockSocket.Verify(x => x.SendAsync(It.IsAny<string>()), Times.Once());
         }
 
         #endregion
@@ -102,7 +102,7 @@ namespace Rhyous.CS6210.Hw1.HealthDistrict.Tests
                 VectorTimeStamp = new VectorTimeStamp(),
                 Sent = new DateTime(2018, 1, 1)
             };
-            packet.VectorTimeStamp.Update(district.SystemRegistration, packet.Sent);
+            packet.VectorTimeStamp.Update(district.SystemRegistration.Id, packet.Sent);
             var json = JsonConvert.SerializeObject(packet);
 
             // Act

@@ -1,5 +1,6 @@
 ﻿using Rhyous.CS6210.Hw1.Interfaces;
 using System;
+using System.Threading.Tasks;
 using ZeroMQ;
 
 namespace Rhyous.CS6210.Hw1.Models
@@ -20,9 +21,9 @@ namespace Rhyous.CS6210.Hw1.Models
             IsConnected = true;
         }
         
-        public void Send(string message, Action<ZFrame> receiveAction)
+        public async Task SendAsync(string message, Action<ZFrame> receiveAction)
         {
-            Socket.Send(message, receiveAction);           
+            await Socket.SendAsync(message, receiveAction);           
         }
 
         #region IDisposable

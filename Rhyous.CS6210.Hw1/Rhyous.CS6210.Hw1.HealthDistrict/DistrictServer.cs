@@ -5,25 +5,26 @@ using Rhyous.CS6210.Hw1.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using ZeroMQ;
 
 namespace Rhyous.CS6210.Hw1.HealthDistrict
 {
     public class DistrictServer : SendServer
     {
-        internal SystemRegistration SystemRegistration = new SystemRegistration();
+        internal SystemRegistration SystemRegistration;
         TimeSpan DateTimeOffset;
         public IRepository<Record> Repo = new Repository<Record>();
 
         public DistrictServer(string name, TimeSpan dateTimeOffset)
         {
-            SystemRegistration.Name = name;
+            SystemRegistration = new SystemRegistration(name);
             DateTimeOffset = dateTimeOffset;
         }
         
-        public void Start(string endpoint)
+        public async Task Start(string endpoint)
         {
-            Start(endpoint, ZSocketType.REP, ReceiveAction);
+            await StartAsync(endpoint, ZSocketType.REP, ReceiveAction);
         }
 
         internal void ReceiveAction(ZFrame frame)
@@ -39,9 +40,9 @@ namespace Rhyous.CS6210.Hw1.HealthDistrict
                 Payload = addedRecords.ToList(),
                 VectorTimeStamp = packet.VectorTimeStamp
             };
-            response.VectorTimeStamp.Update(SystemRegistration, DateTime.Now.Add(DateTimeOffset));
+            response.VectorTimeStamp.Update(SystemRegistration.Id, DateTime.Now.Add(DateTimeOffset));
             var responseJson = JsonConvert.SerializeObject(response);
-            Send(responseJson);
+            SendAsync(responseJson).Wait();
         }
     }
 }

@@ -22,7 +22,7 @@ namespace Rhyous.CS6210.Hw1.NameServer.Tests
                 Logger = mockLogger.Object,
                 Repo = mockRepo.Object
             };
-            var systemRegistration = new SystemRegistration { Name = "S1" };
+            var systemRegistration = new SystemRegistration("S1");
 
             // Act
             server.RegisterSystem(systemRegistration);

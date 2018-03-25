@@ -20,7 +20,7 @@ namespace Rhyous.CS6210.Hw1.Simulator.Tests
             var timeSimulator = new TimeSimulator();
             var random = new Random();
             var generator = new DiseaseRecordGenerator();
-            var client = new DiseaseSimulatorClient(name, mockLogger.Object, nsEndpoint);
+            var client = new DiseaseSimulatorClient(name, nsEndpoint, mockLogger.Object);
             var mockRequestClient = new Mock<IRequestSocket>();
             client.RegClient.Socket = mockRequestClient.Object;
             var endpoint = "tcp://127.0.0.1:55521"; // Added 1 to the end
@@ -34,7 +34,7 @@ namespace Rhyous.CS6210.Hw1.Simulator.Tests
 
             // Assert
             mockClient.Verify(x => x.Connect(It.IsAny<string>()), Times.Once);
-            mockClient.Verify(x => x.Send(It.IsAny<string>(), It.IsAny<Action<ZFrame>>()), Times.Once);
+            mockClient.Verify(x => x.SendAsync(It.IsAny<string>(), It.IsAny<Action<ZFrame>>()), Times.Once);
         }
     }
 }

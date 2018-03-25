@@ -17,15 +17,14 @@ namespace Rhyous.CS6210.Hw1.Models
             return str + "]";
         }
 
-        public VectorTimeStamp Update(SystemRegistration systemRegistration, DateTime dateTime)
+        public VectorTimeStamp Update(int id, DateTime dateTime)
         {
-            VectorCounter counter;
-            if (TryGetValue(systemRegistration.Id, out counter))
+            if (TryGetValue(id, out VectorCounter counter))
             {
                 counter.Counter++;
                 return this;
             }
-            this[systemRegistration.Id] = new VectorCounter { Counter = 1, Date = dateTime };
+            this[id] = new VectorCounter { Counter = 1, Date = dateTime };
             return this;
         }
     }

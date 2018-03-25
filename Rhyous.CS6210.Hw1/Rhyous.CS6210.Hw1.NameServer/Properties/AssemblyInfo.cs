@@ -36,3 +36,4 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyFileVersion("1.0.0.0")]
 
 [assembly: InternalsVisibleTo("Rhyous.CS6210.Hw1.NameServer.Tests")]
+[assembly: InternalsVisibleTo("Rhyous.CS6210.Hw1.Automation")]

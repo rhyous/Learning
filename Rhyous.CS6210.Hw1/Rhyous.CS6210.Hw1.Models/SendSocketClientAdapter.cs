@@ -1,4 +1,5 @@
 ﻿using Rhyous.CS6210.Hw1.Interfaces;
+using System.Threading.Tasks;
 using ZeroMQ;
 
 namespace Rhyous.CS6210.Hw1.Models
@@ -19,9 +20,9 @@ namespace Rhyous.CS6210.Hw1.Models
             IsConnected = true;
         }
         
-        public void Send(string message)
+        public async Task SendAsync(string message)
         {
-            Socket.Send(new ZFrame(message));
+            await Task.Run(() => { Socket.Send(new ZFrame(message)); });
         }
         
         public void Dispose()

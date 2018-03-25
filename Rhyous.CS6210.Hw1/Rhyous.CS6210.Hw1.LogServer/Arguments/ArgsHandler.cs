@@ -48,7 +48,17 @@ namespace Rhyous.CS6210.Hw1.LogServer
 
         public override void HandleArgs(IReadArgs inArgsHandler)
         {
-            Starter.Start();
+            base.HandleArgs(inArgsHandler);
+
+            LogConfigurator.Configure(Args.Value(Constants.File));
+
+            var task = Starter.StartAsync(Args.Value(Constants.Name), 
+                                          Args.Value(Constants.Endpoint),
+                                          Args.Value(Constants.NameServerEndpoint),
+                                          LogConfigurator.Log,
+                                          Args.Value(Constants.AlsoLogOnConsole).AsBool()
+                                         );
+            task.Wait();
         }
     }
 }

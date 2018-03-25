@@ -13,7 +13,7 @@ namespace Rhyous.CS6210.Hw1.LogClient
 
         internal bool IsConnected { get; set; }
 
-        public LoggerClient(string logServerEndpoint, string clientName)
+        public LoggerClient(string logServerEndpoint, string clientName) 
         {
             LogServerEndpoint = logServerEndpoint;
             ClientName = clientName;
@@ -22,27 +22,24 @@ namespace Rhyous.CS6210.Hw1.LogClient
         
         public void WriteLine(string message)
         {
+            if (string.IsNullOrWhiteSpace(LogServerEndpoint))
+                return; // Future - Store and query dns and then log when DNS is active
             if (!IsConnected)
             {
                 SendClient.Connect(LogServerEndpoint, ZSocketType.PUSH);
                 IsConnected = true;
             }
-            SendClient.Send($"{ClientName}: {message}");
+            SendClient.SendAsync($"{ClientName}: {message}");
         }
-        public void WriteLine(string message, SystemRegistration systemRegistration, DateTime? date = null)
+        public void WriteLine(string message, int id, DateTime? date = null)
         {
-            var vts = new VectorTimeStamp().Update(systemRegistration, date ?? DateTime.Now);
+            var vts = new VectorTimeStamp().Update(id, date ?? DateTime.Now);
             WriteLine(message, vts);
         }
 
         public void WriteLine(string message, VectorTimeStamp vts)
         {
-            if (!IsConnected)
-            {
-                SendClient.Connect(LogServerEndpoint, ZSocketType.PUSH);
-                IsConnected = true;
-            }
-            SendClient.Send($"{ClientName}:{vts}: {message}");
+            WriteLine($"{ClientName}:{vts}: {message}");
         }
     }
 }

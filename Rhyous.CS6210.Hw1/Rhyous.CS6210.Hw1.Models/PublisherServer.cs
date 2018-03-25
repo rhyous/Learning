@@ -1,19 +1,23 @@
 ﻿using Rhyous.CS6210.Hw1.Interfaces;
 using System;
+using System.Threading.Tasks;
 using ZeroMQ;
 
 namespace Rhyous.CS6210.Hw1.Models
 {
-    public class PublisherServer : IServer<ZFrame>, IDisposable
+    public class PublisherServer : IServer<ZFrame>, IReply, IDisposable
     {
         public ZContext Context { get; set; }
         public ISendSocketServer Socket { get; set; }
 
-        public virtual void Start(string endpoint, ZSocketType type, Action<ZFrame> receiveAction)
+        public virtual async Task StartAsync(string endpoint, ZSocketType type, Action<ZFrame> receiveAction)
         {
-            Context = Context ?? new ZContext();
-            Socket = Socket ?? new SendSocketServerAdapter(new ZSocket(Context, ZSocketType.PUB));
-            Socket.Bind(endpoint);
+           await Task.Run(() =>
+           {
+               Context = Context ?? new ZContext();
+               Socket = Socket ?? new SendSocketServerAdapter(new ZSocket(Context, ZSocketType.PUB));
+               Socket.Bind(endpoint);
+           });
         }
 
 
@@ -22,9 +26,9 @@ namespace Rhyous.CS6210.Hw1.Models
             Dispose();
         }
 
-        public virtual void Reply(string message)
+        public virtual async Task ReplyAsync(string message)
         {
-            Socket.Send(message);
+            await Socket.SendAsync(message);
         }
 
         #region IDisposable

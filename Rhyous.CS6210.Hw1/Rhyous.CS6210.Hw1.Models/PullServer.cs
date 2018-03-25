@@ -1,5 +1,6 @@
 ﻿using Rhyous.CS6210.Hw1.Interfaces;
 using System;
+using System.Threading.Tasks;
 using ZeroMQ;
 
 namespace Rhyous.CS6210.Hw1.Models
@@ -8,43 +9,57 @@ namespace Rhyous.CS6210.Hw1.Models
     {
         public virtual ZContext Context { get; set; }
         public virtual IPullSocket Socket { get; set; }
+
+        public bool IsStarted { get; set; }
+
         public string Name { get; internal set; }
         
-        public PullServer(string name, string nsEndpoint) : base(nsEndpoint, new SystemRegistration { Name = name })
+        public PullServer(string name, string nsEndpoint, ILogger logger) 
+            : base(nsEndpoint, new SystemRegistration(name), logger)
         {
             Name = name;
         }
 
-        public void Start(string endpoint, Action<ZFrame> receiveAction)
+        public PullServer(string name, string endpoint, string nsEndpoint, ILogger logger)
+            : base(nsEndpoint, new SystemRegistration(name, endpoint), logger)
         {
-            Start(string.IsNullOrWhiteSpace(Name) ? endpoint : Name, endpoint, receiveAction);
+            Name = name;
         }
 
-        public void Start(string name, string endpoint, Action<ZFrame> receiveAction)
+        public async Task StartAsync(string endpoint, Action<ZFrame> receiveAction)
+        {
+            await StartAsync(string.IsNullOrWhiteSpace(Name) ? endpoint : Name, endpoint, receiveAction);
+        }
+
+        public async Task StartAsync(string name, string endpoint, Action<ZFrame> receiveAction)
         {
             Name = name;
             Context = Context ?? new ZContext();
             Socket = Socket ?? new PullSocketAdapter(new ZSocket(Context, ZSocketType.PULL));
             Socket.Bind(endpoint);
-            Console.WriteLine(Name);
-            Console.WriteLine($"Started Pull Server on endpoint {endpoint}");
+            Logger?.WriteLine(Name);
+            Logger?.WriteLine($"Started Pull Server on endpoint {endpoint}");
             while (!_IsDisposed)
             {
-                OpenReceive(receiveAction);
+                await OpenReceiveAsync(receiveAction);
             }
         }
 
-        void IServer<ZFrame>.Start(string endpoint, ZSocketType type, Action<ZFrame> receiveAction)
+        async Task IServer<ZFrame>.StartAsync(string endpoint, ZSocketType type, Action<ZFrame> receiveAction)
         {
-            Start(endpoint, receiveAction);
+            await StartAsync(endpoint, receiveAction);
         }
 
-        internal void OpenReceive(Action<ZFrame> receiveAction)
+        internal async Task OpenReceiveAsync(Action<ZFrame> receiveAction)
         {
-            using (ZFrame request = Socket.ReceiveFrame())
+            IsStarted = true;
+            await Task.Run(() =>
             {
-                receiveAction?.Invoke(request);
-            }
+                using (ZFrame request = Socket.ReceiveFrame())
+                {
+                    receiveAction?.Invoke(request);
+                }
+            });
         }
 
         public virtual void Stop()

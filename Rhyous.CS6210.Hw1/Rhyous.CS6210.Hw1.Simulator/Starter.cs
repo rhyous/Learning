@@ -24,13 +24,13 @@ namespace Rhyous.CS6210.Hw1.Simulator
             int duration = Args.Value(Constants.Duration).To<int>();
             
             Logger = new LoggerClient(Args.Value(Constants.LoggerEndpoint), name);
-            var client = new DiseaseSimulatorClient(name, Logger, nsEndpoint) { Client = new RequestClient() };
+            var client = new DiseaseSimulatorClient(name, nsEndpoint, Logger) { Client = new RequestClient() };
 
-            Logger.WriteLine($"{Constants.Year}: {year}", client.SystemRegistration);
-            Logger.WriteLine($"{Constants.Month}: {month}", client.SystemRegistration);
-            Logger.WriteLine($"{Constants.Day}: {day}", client.SystemRegistration);
-            Logger.WriteLine($"{Constants.TimeMultiplier}: {timeMultiplier}", client.SystemRegistration);
-            Logger.WriteLine($"{Constants.Duration}: {duration}", client.SystemRegistration);
+            Logger.WriteLine($"{Constants.Year}: {year}", client.SystemRegistration.Id);
+            Logger.WriteLine($"{Constants.Month}: {month}", client.SystemRegistration.Id);
+            Logger.WriteLine($"{Constants.Day}: {day}", client.SystemRegistration.Id);
+            Logger.WriteLine($"{Constants.TimeMultiplier}: {timeMultiplier}", client.SystemRegistration.Id);
+            Logger.WriteLine($"{Constants.Duration}: {duration}", client.SystemRegistration.Id);
 
             Logger.WriteLine($"{name} has started.");
             Console.WriteLine("Simulator: " + name);

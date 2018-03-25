@@ -23,7 +23,7 @@ namespace Rhyous.CS6210.Hw1.OutbreakAnalyzer.Tests
             server.Socket = mockSocket.Object;
 
             // Act
-            var task = Task.Run(() => { server.Start("", ZSocketType.REP, null); });
+            var task = server.StartAsync("", ZSocketType.REP, null);
             Thread.Sleep(200);
             server.Stop();
 

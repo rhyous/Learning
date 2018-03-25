@@ -51,7 +51,15 @@ namespace Rhyous.CS6210.Hw1.OutBreakAnalyzer.Arguments
 
         public override void HandleArgs(IReadArgs inArgsHandler)
         {
-            Starter.Start();            
+
+            var name = Args.Value(Constants.Name);
+            if (string.IsNullOrWhiteSpace(name))
+                name = Args.Value(Constants.Disease);
+            Starter.StartAsync(name,
+                               Args.Value(Constants.AnalyzerEndpoint),
+                               Args.Value(Constants.PublisherEndpoint),
+                               Args.Value(Constants.LoggerEndpoint)
+                              ).Wait();            
         }
     }
 }

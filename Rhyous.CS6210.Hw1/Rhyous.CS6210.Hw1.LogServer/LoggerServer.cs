@@ -1,34 +1,39 @@
-﻿using log4net;
+﻿using Rhyous.CS6210.Hw1.Interfaces;
 using Rhyous.CS6210.Hw1.Models;
 using System;
+using System.Threading.Tasks;
 using ZeroMQ;
 
 namespace Rhyous.CS6210.Hw1.LogServer
 {
     public class LoggerServer : PullServer
     {
-        internal ILog Logger;
-        internal string Endpoint;
         internal bool AlsoLogOnConsole;
-        public LoggerServer(string name, ILog logger, string nsEndpoint) : base(name, nsEndpoint)
+        internal VectorTimeStamp VTS = new VectorTimeStamp();
+        public LoggerServer(string name, string nsEndpoint, ILogger logger) 
+            : base(name, nsEndpoint, logger)
         {
-            Logger = logger;
         }
 
-        public void Start(string endpoint, bool alsoLogOnConsole)
+        public LoggerServer(string name, string endpoint, string nsEndpoint, ILogger logger)
+            : base(name, endpoint, nsEndpoint, logger)
         {
-            Register();
-            Endpoint = endpoint;
-            AlsoLogOnConsole = alsoLogOnConsole;
-            Start(Endpoint, ReceiveAction);
+        }
+
+        public async Task StartAsync(string endpoint)
+        {
+            if (string.IsNullOrWhiteSpace(endpoint))
+                endpoint = Endpoint;
+            if (string.IsNullOrWhiteSpace(endpoint) && !IsRegistered)
+                await RegisterAsync(VTS);
+            endpoint = Endpoint;
+            await StartAsync(Endpoint, ReceiveAction);
         }
 
         internal void ReceiveAction(ZFrame frame)
         {
             var msg = frame.ReadString();
-            Logger.Debug(msg);
-            if (AlsoLogOnConsole)
-                Console.WriteLine(msg);
+            Logger.WriteLine(msg);
         }
     }
 }

@@ -25,7 +25,7 @@ namespace Rhyous.CS6210.Hw1.OutbreakAnalyzer.Tests
             var record = new Record { Id = 1, Disease = 0, };
             
             // Act
-            var task = Task.Run(() => { server.Start(""); });
+            var task = Task.Run(() => { server.StartAsync(""); });
             Thread.Sleep(200);
             server.Stop();
 

@@ -38,7 +38,7 @@ namespace Rhyous.CS6210.Hw1.HealthDistrict.Arguments
         public override void HandleArgs(IReadArgs inArgsHandler)
         {
             var timespan = new TimeSpan(Args.Value(Constants.DateTimeOffset).To(0));
-            Starter.Start(timespan);
+            Starter.StartAsync(timespan);
         }
     }
 }

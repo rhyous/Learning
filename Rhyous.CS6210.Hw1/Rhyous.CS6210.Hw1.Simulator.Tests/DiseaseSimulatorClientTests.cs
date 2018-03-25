@@ -18,7 +18,7 @@ namespace Rhyous.CS6210.Hw1.Simulator.Tests
             var mockLogger = new Mock<ILogger>();
             var name = "DSC1";
             var timeSimulator = new TimeSimulator() { IsReportingProgress = true };
-            var client = new DiseaseSimulatorClient(name, mockLogger.Object, nsEndpoint) { TimeSimulator = timeSimulator };
+            var client = new DiseaseSimulatorClient(name, nsEndpoint, mockLogger.Object) { TimeSimulator = timeSimulator };
             var mockRequestClient = new Mock<IRequestSocket>();
             client.RegClient.Socket = mockRequestClient.Object;
             var date = new DateTime(2018, 1, 1);
