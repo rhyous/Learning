@@ -6,7 +6,7 @@ $LogServerName = "LogServer1"
 $nsEndpoint="tcp://127.0.0.1:6001"
 Start-Process .\NameServer\Rhyous.CS6210.Hw1.NameServer.exe -ArgumentList "e=$($nsEndpoint)","lsn=$($LogServerName)","ulh=true"
 
-Start-Sleep -s 4
+Start-Sleep -s 5
 
 # Start log server
 Start-Process .\LogServer\Rhyous.CS6210.Hw1.Logger.exe -ArgumentList "n=$($LogServerName)","ns=$($nsEndpoint)","c=true"
