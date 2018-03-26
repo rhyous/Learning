@@ -32,7 +32,8 @@ namespace Rhyous.CS6210.Hw1.InstanceLauncher
                     Name = "AccessKey",
                     ShortName = "ak",
                     Description = "The access access key provided to you by Amazon.",
-                    Example = "{name}=AKA7PXD3H7MN2AWZSR9", // Fake key I made up
+                    Example = "{name}=AKA7PXD3H7MN2AWZSR9", // Fake key I made up,
+                    IsRequired = true,
                     Action = (value) =>
                     {
                         Log.Debug(value);
@@ -44,6 +45,7 @@ namespace Rhyous.CS6210.Hw1.InstanceLauncher
                     ShortName = "sk",
                     Description = "The secret access key provided to you by Amazon.",
                     Example = "{name}=RvOxT8JLRL8P57oEvJYfqVr0YcoQb7Xo0CN2YcBvL", // Fake key I made up
+                    IsRequired = true,
                     Action = (value) =>
                     {
                         Log.Debug(value);
