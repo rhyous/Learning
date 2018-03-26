@@ -64,9 +64,11 @@ namespace Rhyous.CS6210.Hw1.NameServer
                     }
                     if (registration.IpAddress == null)
                     {
-                        registration.IpAddress = new byte[] { Subnet[0], Subnet[1], Subnet[2], (byte)NextIp };
+                        registration.IpAddress = UseLocalHost 
+                                               ? IpAddress.LocalHost 
+                                               : (IpAddress)new byte[] { Subnet[0], Subnet[1], Subnet[2], (byte)NextIp };
                     }
-                    Logger.WriteLine($"System Registration: Id = {registration.Id}, Name = {registration.Name} ");
+                    Logger?.WriteLine($"System Registration: Id = {registration.Id}, Name = {registration.Name} ");
                     var createdregistration = Repo.Create(registration);
                     return true;
                 }
@@ -83,8 +85,8 @@ namespace Rhyous.CS6210.Hw1.NameServer
         internal void ReceiveAction(ZFrame frame)
         {
             var json = frame.ReadString();
-            Logger.WriteLine("Received: ");
-            Logger.WriteLine(json);
+            Logger?.WriteLine("Received: ");
+            Logger?.WriteLine(json);
             if (json.StartsWith("QRY"))
                 QuerySystem(json.Substring(5)).Wait(); // Must prefix JSON with "QRY: "
             if (json.StartsWith("REG"))
@@ -96,7 +98,7 @@ namespace Rhyous.CS6210.Hw1.NameServer
             var packet = JsonConvert.DeserializeObject<Packet<NsQuery>>(json);
             var query = packet.Payload;
             var vts = packet.VectorTimeStamp;
-            Logger.WriteLine($"Revieved query request from system: {packet.SenderId} for a system with name: {query.Name}.", vts.Update(SystemRegistration.Id, DateTime.Now));
+            Logger?.WriteLine($"Revieved query request from system: {packet.SenderId} for a system with name: {query.Name}.", vts.Update(SystemRegistration.Id, DateTime.Now));
             var reg = Repo.Read(query.Name);
             var response = new Packet<SystemRegistration>
             {
@@ -112,7 +114,7 @@ namespace Rhyous.CS6210.Hw1.NameServer
             var packet = JsonConvert.DeserializeObject<Packet<SystemRegistration>>(json);
             var systemRegistration = packet.Payload;
             var vts = packet.VectorTimeStamp;
-            Logger.WriteLine($"Revieved system registration request from system: {systemRegistration.Name}.", vts.Update(SystemRegistration.Id, DateTime.Now));
+            Logger?.WriteLine($"Revieved system registration request from system: {systemRegistration.Name}.", vts.Update(SystemRegistration.Id, DateTime.Now));
             if (await RegisterSystem(systemRegistration))
             {
                 var response = new Packet<SystemRegistration>

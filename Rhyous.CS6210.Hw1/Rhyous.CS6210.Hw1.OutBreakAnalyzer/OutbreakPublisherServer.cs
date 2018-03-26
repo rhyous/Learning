@@ -11,6 +11,11 @@ namespace Rhyous.CS6210.Hw1.OutBreakAnalyzer
     {
         public IRepository<Record> Repo = new Repository<Record>();
 
+        public OutbreakPublisherServer(string name, string endpoint, string nsEndpoint, ILogger logger) 
+            : base(name, endpoint, nsEndpoint, logger)
+        {
+        }
+
         internal void ReceiveAction(ZFrame frame)
         {
             var json = frame.ReadString();

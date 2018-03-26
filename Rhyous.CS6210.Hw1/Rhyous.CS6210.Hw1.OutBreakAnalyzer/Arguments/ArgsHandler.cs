@@ -23,6 +23,15 @@ namespace Rhyous.CS6210.Hw1.OutBreakAnalyzer.Arguments
             {
                 new Argument
                 {
+                    Name = Constants.PublisherName,
+                    ShortName = "pn",
+                    Description = "The name of the publisher server.",
+                    Example = "{name}=Publisher1",
+                    DefaultValue = "Publisher1",
+                    Action = (value) => { Console.WriteLine(value); }
+                },
+                new Argument
+                {
                     Name = Constants.PublisherEndpoint,
                     ShortName = "p",
                     Description = "The endpoint for the server service.",
@@ -51,14 +60,15 @@ namespace Rhyous.CS6210.Hw1.OutBreakAnalyzer.Arguments
 
         public override void HandleArgs(IReadArgs inArgsHandler)
         {
-
             var name = Args.Value(Constants.Name);
             if (string.IsNullOrWhiteSpace(name))
                 name = Args.Value(Constants.Disease);
             Starter.StartAsync(name,
-                               Args.Value(Constants.AnalyzerEndpoint),
+                               Args.Value(Constants.Endpoint),
+                               Args.Value(Constants.PublisherName),
                                Args.Value(Constants.PublisherEndpoint),
-                               Args.Value(Constants.LoggerEndpoint)
+                               Args.Value(Constants.NameServerEndpoint),
+                               Args.Value(Constants.LoggerServerName)
                               ).Wait();            
         }
     }

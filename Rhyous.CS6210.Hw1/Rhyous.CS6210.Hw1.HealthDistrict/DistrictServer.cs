@@ -10,15 +10,14 @@ using ZeroMQ;
 
 namespace Rhyous.CS6210.Hw1.HealthDistrict
 {
-    public class DistrictServer : SendServer
+    public class DistrictServer : SendServerWithRegistration
     {
-        internal SystemRegistration SystemRegistration;
         TimeSpan DateTimeOffset;
         public IRepository<Record> Repo = new Repository<Record>();
 
-        public DistrictServer(string name, TimeSpan dateTimeOffset)
+        public DistrictServer(string name, string endpoint, string nsEndpoint, TimeSpan dateTimeOffset, ILogger logger) 
+            : base(name, endpoint, nsEndpoint, logger)
         {
-            SystemRegistration = new SystemRegistration(name);
             DateTimeOffset = dateTimeOffset;
         }
         

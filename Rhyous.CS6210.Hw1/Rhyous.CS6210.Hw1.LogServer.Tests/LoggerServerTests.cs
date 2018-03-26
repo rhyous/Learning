@@ -41,7 +41,7 @@ namespace Rhyous.CS6210.Hw1.LogServer.Tests
             var pushSocket = new ZSocket(pushContext, ZSocketType.PUSH);
             pushSocket.Connect(endpoint);
 
-            var loggerClient = new LoggerClient(endpoint, clientName);
+            var loggerClient = new LoggerClient(endpoint, clientName, nsEndpoint);
             var vts = new VectorTimeStamp();
             vts.Update(systemRegistration.Id, DateTime.Now);
 

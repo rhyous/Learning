@@ -23,17 +23,18 @@ namespace Rhyous.CS6210.Hw1.LogServer
         public async Task StartAsync(string endpoint)
         {
             if (string.IsNullOrWhiteSpace(endpoint))
+            {
+                if (string.IsNullOrWhiteSpace(endpoint) && !IsRegistered)
+                    await RegisterAsync(VTS);
                 endpoint = Endpoint;
-            if (string.IsNullOrWhiteSpace(endpoint) && !IsRegistered)
-                await RegisterAsync(VTS);
-            endpoint = Endpoint;
+            }
             await StartAsync(Endpoint, ReceiveAction);
         }
 
         internal void ReceiveAction(ZFrame frame)
         {
             var msg = frame.ReadString();
-            Logger.WriteLine(msg);
+            Logger?.WriteLine(msg);
         }
     }
 }

@@ -10,15 +10,15 @@ namespace Rhyous.CS6210.Hw1.NameServer
     {
         internal static ILogger Logger;
         internal static DynamicNameServer Ns;
-        internal static async Task StartAsync(string name, string endpoint, string loggerEndpoint)
+        internal static async Task StartAsync(string name, string endpoint, string logServerName, bool useLocalhost)
         {
             Console.WriteLine($"{name}:{typeof(DynamicNameServer).Name}");
             Console.WriteLine(endpoint);
             Logger = new MultiLogger(
-                new LoggerClient(loggerEndpoint, name),
+                //new LoggerClient(logServerName, name, endpoint),
                 new ConsoleLogger()
             );
-            Ns = new DynamicNameServer(name, Logger);
+            Ns = new DynamicNameServer(name, Logger) { UseLocalHost = useLocalhost};
             await Ns.StartAsync(endpoint);
         }
 

@@ -38,7 +38,7 @@ namespace Rhyous.CS6210.Hw1.Models
 
         public override string ToString()
         {
-            return $"{string.Join(",", _Octets)}";
+            return $"{string.Join(".", _Octets)}";
         }
     }
 }

@@ -7,6 +7,14 @@ namespace Rhyous.CS6210.Hw1.Models
 {
     public class RequestClient : IClient<ZFrame>, IDisposable
     {
+        private bool ThrowOnFailureToSend;
+        private bool RetryOnFailure;
+        public RequestClient(bool throwOnFailureToSend, bool retryOnFailure)
+        {
+            ThrowOnFailureToSend = throwOnFailureToSend;
+            RetryOnFailure = retryOnFailure;
+        }
+
         public ZContext Context { get; set; }
         public IRequestSocket Socket { get; set; }
         public bool IsConnected { get; internal set; }
@@ -14,7 +22,7 @@ namespace Rhyous.CS6210.Hw1.Models
         public void Connect(string endpoint)
         {
             Context = Context ?? new ZContext();
-            Socket = Socket ?? new RequestSocketAdapter(new ZSocket(Context, ZSocketType.REQ));
+            Socket = Socket ?? new RequestSocketAdapter(new ZSocket(Context, ZSocketType.REQ), ThrowOnFailureToSend, RetryOnFailure);
 
             // Connect
             Socket.Connect(endpoint);

@@ -7,13 +7,20 @@ namespace Rhyous.CS6210.Hw1.Models
 {
     public class SendClient : ISendAsync, IDisposable
     {
+        private readonly bool ThrowOnFailureToSend;
+        private readonly bool RetryOnFailure;
+        public SendClient(bool throwOnFailureToSend, bool retryOnFailure) {
+            ThrowOnFailureToSend = throwOnFailureToSend;
+            RetryOnFailure = retryOnFailure;
+        }
+
         public ZContext Context { get; set; }
         public IRequestSocket Socket { get; set; }
 
         public virtual void Connect(string endpoint, ZSocketType type)
         {
             Context = Context ?? new ZContext();
-            Socket = Socket ?? new RequestSocketAdapter(new ZSocket(Context, type));
+            Socket = Socket ?? new RequestSocketAdapter(new ZSocket(Context, type), ThrowOnFailureToSend, RetryOnFailure);
             Socket.Connect(endpoint);
         }
         

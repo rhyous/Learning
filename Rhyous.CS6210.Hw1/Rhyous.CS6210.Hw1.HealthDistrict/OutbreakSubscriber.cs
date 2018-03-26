@@ -15,7 +15,7 @@ namespace Rhyous.CS6210.Hw1.HealthDistrict
             var json = frame.ReadString();
             Console.WriteLine("** OUTBREAK ALLERT **");
             Console.WriteLine(json);
-            Logger.WriteLine("Outbreak alert: " + json);
+            Logger?.WriteLine("Outbreak alert: " + json);
 
         }
     }

@@ -14,10 +14,10 @@ namespace Rhyous.CS6210.Hw1.LogServer
             Logger = new Log4NetLogger(log);
             if (alsoLogToConsole)
                 Logger = new MultiLogger(Logger, new ConsoleLogger());
-            Logger.WriteLine($"{name} has started.");
+            Logger?.WriteLine($"{name} has started.");
 
             LS = new LoggerServer(name, endpoint, nsEndpoint, Logger);
-            await LS.RegisterAsync(LS.VTS, endpoint);
+            await LS.RegisterAsync(LS.VTS);
             while (!LS.IsRegistered)
             { }
             await LS.StartAsync(endpoint);

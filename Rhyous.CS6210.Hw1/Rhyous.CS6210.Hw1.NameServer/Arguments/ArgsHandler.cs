@@ -23,18 +23,18 @@ namespace Rhyous.CS6210.Hw1.NameServer.Arguments
             Arguments.AddRange(new List<Argument>
             {
                 // Add more args here
-				// new Argument
-                // {
-                //     Name = "NextArg",
-                //     ShortName = "N",
-                //     Description = "This is the next arg you are going to add.",
-                //     Example = "{name}=true",
-                //     DefaultValue = "false"
-                //     AllowedValues = CommonAllowedValues.TrueFalse
-                // },
+				 new Argument
+                 {
+                     Name = "UseLocalHost",
+                     ShortName = "ulh",
+                     Description = "Use localhost, 127.0.0.1 for all registrations.",
+                     Example = "{name}=true",
+                     DefaultValue = "false",
+                     AllowedValues = CommonAllowedValues.TrueFalse
+                 },
                 new ConfigFileArgument(argsManager) // This is a special Argument type to allow for args in a file
             });
-            Arguments.RemoveAt(2); // Remove common logger endpoint as this is logger
+            Arguments.RemoveAt(2); // Remove common NameServer endpoint from comon as this is Name Server, so Enpoint is used.
         }
 
         public override void HandleArgs(IReadArgs inArgsHandler)
@@ -42,7 +42,8 @@ namespace Rhyous.CS6210.Hw1.NameServer.Arguments
             base.HandleArgs(inArgsHandler);
             var task = Starter.StartAsync(Args.Value(Constants.Name),
                                           Args.Value(Constants.Endpoint),
-                                          Args.Value(Constants.LoggerEndpoint)
+                                          Args.Value(Constants.LoggerServerName),
+                                          Args.Value(Constants.UseLocalHost).AsBool()
                                          );
             task.Wait();
         }

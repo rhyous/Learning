@@ -20,7 +20,7 @@ namespace Rhyous.CS6210.Hw1.HealthDistrict.Tests
         public void DistrictServerStart()
         {
             // Arrange
-            var district = new DistrictServer("DS1", TimeSpan.Zero);
+            var district = new DistrictServer("DS1", "", "", TimeSpan.Zero, null);
             var mockSocket = new Mock<IReplySocket>();
             mockSocket.Setup(s => s.Bind(It.IsAny<string>()));
             district.Socket = mockSocket.Object;
@@ -39,7 +39,7 @@ namespace Rhyous.CS6210.Hw1.HealthDistrict.Tests
         public void ReceiveActionCallsRepoCreate()
         {
             // Arrange
-            var district = new DistrictServer("DS1", TimeSpan.Zero);
+            var district = new DistrictServer("DS1", "", "", TimeSpan.Zero, null);
             var records = new List<Record> { new Record { Id = 1, Disease = 0 } };
 
             var mockRepo = new Mock<IRepository<Record>>();
@@ -77,7 +77,7 @@ namespace Rhyous.CS6210.Hw1.HealthDistrict.Tests
         public void DistrictServerBindTest()
         {
             // Arrange
-            var district = new DistrictServer("DS1", TimeSpan.Zero);
+            var district = new DistrictServer("DS1","", "", TimeSpan.Zero, null);
             var mockRepo = new Mock<IRepository<Record>>();
             var list = new List<Record>();
             district.Repo = mockRepo.Object;

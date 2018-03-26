@@ -13,17 +13,22 @@ namespace Rhyous.CS6210.Hw1.HealthDistrict
         internal static async Task StartAsync(TimeSpan offset)
         {
             var name = Args.Value(Constants.DistrictServerName);
-            Logger = new LoggerClient(Args.Value(Constants.LoggerEndpoint), name);
-            Logger.WriteLine($"{name} has started.");
+            Logger = new MultiLogger(
+                new ConsoleLogger(),
+                new LoggerClient(Args.Value(Constants.LoggerEndpoint), name, Args.Value("NsEndpoint"))
+            );
+            Logger?.WriteLine($"{name} has started.");
 
             Console.WriteLine("Health District: " + name);
             var endpoint = Args.Value(Constants.DistrictServerEndPoint);
+            var nsEndpoint = Args.Value(Constants.NameServerEndpoint);
             Console.WriteLine("Endpoint: " + endpoint);
-            var districtServer = new DistrictServer("DS1", offset);
+            var districtServer = new DistrictServer("DS1", endpoint, nsEndpoint, offset, Logger);
+            await districtServer.RegisterAsync();
             await districtServer.Start(endpoint);
 
             var publisherArgInput = Args.Value(Constants.PublisherEndpoints);
-            Logger.WriteLine("Publisher endpoints: " + publisherArgInput);
+            Logger?.WriteLine("Publisher endpoints: " + publisherArgInput);
             var pubEndpoints =publisherArgInput.ToArray();
             foreach (var publisherEndPoint in pubEndpoints)
             {

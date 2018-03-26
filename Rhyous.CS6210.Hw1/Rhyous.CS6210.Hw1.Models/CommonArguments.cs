@@ -13,8 +13,8 @@ namespace Rhyous.CS6210.Hw1.Models
                     Name = Constants.Endpoint,
                     ShortName = "e",
                     Description = "The endpoint for the server service.",
-                    Example = $"{{name}}=tcp://127.0.0.1:{defaultPort}",
-                    DefaultValue = $"tcp://127.0.0.1:{defaultPort}"
+                    Example = $"{{name}}=tcp://127.0.0.1:{defaultPort}"
+                    //DefaultValue = $"tcp://127.0.0.1:{defaultPort}"
                 },
                 new Argument
                 {
@@ -39,6 +39,14 @@ namespace Rhyous.CS6210.Hw1.Models
                     Description = "The logger server endpoint.",
                     Example = "{name}=tcp://127.0.0.1:5501",
                     DefaultValue = "tcp://127.0.0.1:5501"
+                },
+                new Argument
+                {
+                    Name = Constants.LoggerServerName,
+                    ShortName = "LSN",
+                    Description = "The logger server name.",
+                    Example = "{name}=LogServer1",
+                    DefaultValue = "LogServer1"
                 }
             };
         }

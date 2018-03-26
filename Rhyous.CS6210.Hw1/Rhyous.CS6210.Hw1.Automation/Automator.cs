@@ -16,8 +16,9 @@ namespace Rhyous.CS6210.Hw1.Automation
         {
             var nsEndpoint = "tcp://127.0.0.1:6001";
             string logServerEndpoint = null; //"tcp://127.0.0.1:5001";
+            string logServerName = "LogServer1";
 
-            var nsTask = NameServer.Starter.StartAsync("NameServer", nsEndpoint, logServerEndpoint);
+            var nsTask = NameServer.Starter.StartAsync("NameServer", nsEndpoint, logServerName, true);
             while (NameServer.Starter.Ns == null || !NameServer.Starter.Ns.IsStarted)
             {
             }
@@ -27,14 +28,12 @@ namespace Rhyous.CS6210.Hw1.Automation
             mockLogger.Setup(l => l.Debug(It.IsAny<object>())).Callback((object msg) => {
                 logMessages.Add(msg.ToString());
             });
-            var logTask = LogServer.Starter.StartAsync("LogServer", logServerEndpoint, nsEndpoint, mockLogger.Object, true);
+            var logTask = LogServer.Starter.StartAsync(logServerName, logServerEndpoint, nsEndpoint, mockLogger.Object, true);
             while (LogServer.Starter.LS == null || !LogServer.Starter.LS.IsStarted)
             {
             }
             
-            var analyzerEndpoint1 = "tcp://127.0.0.1:5101";
-            var publisherEndpoint1 = "tcp://127.0.0.1:5201";
-            var analyzerTask = OutBreakAnalyzer.Starter.StartAsync("AnalyzerServer1", analyzerEndpoint1, publisherEndpoint1, logServerEndpoint);
+            var analyzerTask = OutBreakAnalyzer.Starter.StartAsync("AnalyzerServer1", null, "Publisher1", null, nsEndpoint, logServerName);
             
             var cts = new CancellationTokenSource(120000);
             Task.WaitAll(new[] { nsTask, logTask, analyzerTask }, cts.Token);

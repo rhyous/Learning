@@ -13,15 +13,18 @@
         public static string Endpoint = "EndPoint";
         public static string File = "File";
         public static string LoggerEndpoint = "LoggerEndPoint";
+        public static string LoggerServerName = "LoggerServerName";
         public static string Month = "Month";
         public static string Name = "Name";
         public static string NameServerEndpoint = "NameServerEndpoint";
         public static string PublisherEndpoint = "PublisherEndpoint";
         public static string PublisherEndpoints = "PublisherEndpoints";
+        public static string PublisherName = "PublisherName";
         public static string SocketType = "SocketType";
         public static string StartDate = "Start Date";
         public static string Threshold = "Threshold";
         public static string TimeMultiplier = "TimeMultiplier";
+        public static string UseLocalHost = "UseLocalHost";
         public static string Year = "Year";
     }
 }

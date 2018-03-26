@@ -43,7 +43,7 @@ namespace Rhyous.CS6210.Hw1.Repository
 
         public T Read(string name)
         {
-            return Context.Entities.FirstOrDefault(e => e.Name == name);
+            return Context.Entities.Where(e => e.Name == name).OrderByDescending(e=> e.Id).FirstOrDefault();
         }
 
         public T Update(T entity)

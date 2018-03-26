@@ -17,7 +17,7 @@ namespace Rhyous.CS6210.Hw1.OutbreakAnalyzer.Tests
         public void OutbreakPublisherServerStartTest()
         {
             // Arrange
-            var server = new OutbreakPublisherServer();
+            var server = new OutbreakPublisherServer("Publisher1", "", "", null);
             var mockSocket = new Mock<IReplySocket>();
             mockSocket.Setup(s => s.Bind(It.IsAny<string>()));
             server.Socket = mockSocket.Object;
