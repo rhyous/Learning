@@ -90,9 +90,17 @@ namespace Rhyous.AmazonS3BucketManager
         public static async Task UploadFilesAsync(TransferUtility transferUtility, string bucket, string localDirectory)
         {
             var files = await FileUtils.GetFiles(localDirectory, true);
-            var directoryName = Path.GetFileName(localDirectory); // This is not a typo. GetFileName is correctly used.            
-            var tasks = files.Select(f => UploadFileAsync(transferUtility, bucket, f, Path.GetDirectoryName(f).Substring(f.IndexOf(directoryName)).Replace('\\', '/')));
-            await Task.WhenAll(tasks);
+            var directoryName = Path.GetFileName(localDirectory); // This is not a typo. GetFileName is correctly used.   
+            int i = 0;
+            int batchSize = 5;
+            var batches = files.GetBatch(batchSize);
+            foreach (var batch in batches)
+            {
+                var tasks = batch.Select(f => UploadFileAsync(transferUtility, bucket, f, Path.GetDirectoryName(f).Substring(f.IndexOf(directoryName)).Replace('\\', '/')));
+                await Task.WhenAll(tasks);
+                Console.WriteLine($"Uploaded batch {i}: {i * batchSize} of {files.Count}");
+                i++;
+            }
         }
     }
 }

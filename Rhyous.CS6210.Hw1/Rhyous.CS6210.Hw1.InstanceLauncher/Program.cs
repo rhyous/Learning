@@ -45,8 +45,9 @@ namespace Rhyous.CS6210.Hw1.InstanceLauncher
                 await BucketManager.CreateBucketAsync(s3client, bucket);
 
             // Upload files to bucket
-            if (!Args.Value("Skip").Split(',').Any(v=>v=="UploadFiles"))
-                await BucketManager.UploadFilesAsync(transferUtility, bucket, Args.Value("LocalDirectory"));
+            //var skipSections = Args.Value("Skip")?.Split(',');
+            //if (skipSections != null && skipSections.Any() && skipSections.Any(v=>v=="UploadFiles"))
+            await BucketManager.UploadFilesAsync(transferUtility, bucket, Args.Value("LocalDirectory"));
 
             // Get launch script
             var scriptText = File.ReadAllText(Args.Value("LaunchScript"));
