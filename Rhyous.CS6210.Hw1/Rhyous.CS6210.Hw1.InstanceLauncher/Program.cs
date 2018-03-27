@@ -46,7 +46,7 @@ namespace Rhyous.CS6210.Hw1.InstanceLauncher
 
             // Upload files to bucket
             var skipSections = Args.Value("Skip")?.Split(',');
-            if (skipSections != null && skipSections.Any() && skipSections.Any(v=>v=="UploadFiles"))
+            if (skipSections == null || skipSections.Any() || skipSections.Any(v=>v=="UploadFiles"))
                 await BucketManager.UploadFilesAsync(transferUtility, bucket, Args.Value("LocalDirectory"));
 
             // Get launch script
