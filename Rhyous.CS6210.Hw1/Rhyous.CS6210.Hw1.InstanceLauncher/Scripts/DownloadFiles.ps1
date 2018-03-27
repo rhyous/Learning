@@ -37,7 +37,7 @@ LogWrite($objects)
 foreach($object in $objects) {
     $localFileName = $object.Key -replace $keyPrefix, ''
     if ($localFileName -ne '') {
-        $localFilePath = Join-Path $localPath $localFileName
+        $localFilePath = Join-Path -path $localPath -childpath $localFileName
         Copy-S3Object -BucketName $bucket -Key $object.Key -LocalFile $localFilePath -AccessKey $accessKey -SecretKey $secretKey -Region $region
 		LogWrite("Copied file: $($localFilePath)")
     }
