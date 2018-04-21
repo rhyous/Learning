@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <ApplicationIcon />
+    <StartupObject />
+    <RootNamespace>Rhyous.CS6210.Hw4</RootNamespace>
+	<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AWSSDK.Core" Version="3.3.21.20" />
+    <PackageReference Include="AWSSDK.S3" Version="3.3.18" />
+    <PackageReference Include="log4net" Version="2.0.8" />
+    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="Rhyous.SimpleArgs" Version="2.0.0" />
+    <PackageReference Include="Rhyous.StringLibrary" Version="1.1.2" />
+    <PackageReference Include="ZeroMQ" Version="4.1.0.26" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Rhyous.CS6210.Hw4.Models\Rhyous.CS6210.Hw4.Models.csproj" />
+    <ProjectReference Include="..\Rhyous.StringAlgorithms\Rhyous.StringAlgorithms.csproj" />
+  </ItemGroup>
+
+</Project>
