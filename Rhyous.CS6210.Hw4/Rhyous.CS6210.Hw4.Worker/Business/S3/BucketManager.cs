@@ -98,15 +98,15 @@ namespace Rhyous.CS6210.Hw4
             return files;
         }
 
-        public static async Task<bool> FolderExists(AmazonS3Client client, string bucket, string path)
+        public static async Task<bool> FolderExistsAsync(AmazonS3Client client, string bucket, string path)
         {
             path = path.Replace("\\", "/");
             path = path.EndsWith("/") ? path : path + "/";
-            return await FileExists(client, bucket, path);
+            return await FileExistsAsync(client, bucket, path);
         }
 
 
-        public static async Task<bool> FileExists(AmazonS3Client client, string bucket, string path)
+        public static async Task<bool> FileExistsAsync(AmazonS3Client client, string bucket, string path)
         {
             path = path.Replace("\\", "/");
             GetObjectResponse obj = null;
@@ -115,10 +115,13 @@ namespace Rhyous.CS6210.Hw4
             return obj != null;
         }
 
-        public static async Task<bool> MoveObject(AmazonS3Client client, string srcBucket, string dstBucket, string src, string dst)
+        public static async Task<bool> MoveObjectAsync(AmazonS3Client client, string srcBucket, string dstBucket, string src, string dst)
         {
             src = src.Replace("\\", "/");
             dst = dst.Replace("\\", "/");
+
+            if (!await FileExistsAsync(client, srcBucket, src))
+                return false;
             var request = new CopyObjectRequest
             {
                 SourceBucket = srcBucket,

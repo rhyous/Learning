@@ -20,7 +20,7 @@ namespace Rhyous.CS6210.Hw4
 
         public async Task<Master> ReadAsync(string masterDirectory)
         {
-            var result = await BucketManager.FolderExists(_Client, _Bucket, masterDirectory);
+            var result = await BucketManager.FolderExistsAsync(_Client, _Bucket, masterDirectory);
             if (!result)
                 return null;
             var masterFiles = await BucketManager.ListFilesAsync(_Client, _Bucket, masterDirectory, ".json");

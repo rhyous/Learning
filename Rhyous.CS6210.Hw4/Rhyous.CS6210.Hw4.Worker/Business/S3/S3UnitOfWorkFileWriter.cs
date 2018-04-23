@@ -21,10 +21,11 @@ namespace Rhyous.CS6210.Hw4
         }
         public async Task WriteAsync(string directory, UnitOfWork unitOfWork)
         {
-            var folderExists = await BucketManager.FolderExists(_Client, _Bucket, directory);
+            var folderExists = await BucketManager.FolderExistsAsync(_Client, _Bucket, directory);
             if (!folderExists)
                 return;
-            var fileFullPath = Path.Combine(directory, $"{unitOfWork.Id}.json");
+            var filename = $"{unitOfWork.Id}.json".PadLeft(10, '0');
+            var fileFullPath = Path.Combine(directory, filename);
             fileFullPath = fileFullPath.Replace("\\", "/");
             var json = JsonConvert.SerializeObject(unitOfWork);
             await BucketManager.CreateTextFileAsync(_Client, _Bucket, fileFullPath, json);
@@ -34,7 +35,7 @@ namespace Rhyous.CS6210.Hw4
         {
             source = source.Replace("\\", "/");
             destination = destination.Replace("\\", "/");
-            await BucketManager.MoveObject(_Client, _Bucket, _Bucket, source, destination);
+            await BucketManager.MoveObjectAsync(_Client, _Bucket, _Bucket, source, destination);
         }
     }
 }

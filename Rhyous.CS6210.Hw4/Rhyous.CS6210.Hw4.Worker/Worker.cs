@@ -23,7 +23,7 @@ namespace Rhyous.CS6210.Hw4
         private readonly IUnitOfWorkFileReader _UnitOfWorkFileReader;
         private readonly IUnitOfWorkFileWriter _UnitOfWorkFileWriter;
         private readonly IWorkProcessor _WorkProcessor;
-        private readonly IWorkerLogger _Logger;
+        internal readonly IWorkerLogger _Logger;
 
         public Worker(string name,
                       IpAddress ipAddress,
@@ -94,7 +94,35 @@ namespace Rhyous.CS6210.Hw4
         public async Task<ElectionResponseType> ElectionRequestAsync(ElectionRequestType type)
         {
             _Logger?.Debug("Requesting election: " + type.ToString());
-            var tasks = new List<Task<ElectionResponse>>();
+            var tasks = new List<Task>();
+            var responses = new List<ElectionResponseType>();
+            var masterDir = Path.Combine(_PrimaryDirectory, Folders.Master);
+            var list = await _UnitOfWorkFileReader.GetFilesAsync(masterDir);
+            var workers = new List<WorkerConnection>();
+            if (Master != null && Master.Workers.Any())
+                workers.AddRange(Master.Workers);
+            foreach (var masterFile in list)
+            {
+                _Logger?.Debug($"Finding other master nominees.");
+                var task = _UnitOfWorkFileReader.ReadAllTextAsync(masterFile);
+                var continueTask = task.ContinueWith(t =>
+                {
+                    if (task.Result == null)
+                        return;
+                    var candidateMaster = JsonConvert.DeserializeObject<Master>(task.Result);
+                    if (candidateMaster == null)
+                        return;
+                    if (!workers.Contains(candidateMaster.Connection))
+                        workers.Add(candidateMaster.Connection);
+                });
+                tasks.Add(continueTask);
+            }
+            await Task.WhenAll(tasks);
+            tasks.Clear();
+            if (Master == null)
+                Master = new Master { Connection = Connection };
+            Master.Workers.AddRange(workers);
+            Master.Workers = Master.Workers.Distinct().ToList();
             foreach (var worker in Master.Workers)
             {
                 Task<ElectionResponse> task = null;
@@ -102,10 +130,22 @@ namespace Rhyous.CS6210.Hw4
                     task = _ElectionRequester.ElectMeAsync(worker);
                 if (type == ElectionRequestType.Resignation)
                     task = _ElectionRequester.ResignAsync(worker);
-                tasks.Add(task);
+                var continueTask = task.ContinueWith(t =>
+                {
+                    _Logger?.Debug($"Response from {worker} was {t.Result.ResponseType}");
+                    if (t.Result.ResponseType == ElectionResponseType.NoResponse)
+                    {
+                        Master.Workers.Remove(worker);
+
+                        PutMasterToSleepAsync(new Master { Connection = worker }, masterDir);
+                        _Logger?.Debug("Remove worker: " + worker);
+                    }
+                    responses.Add(t.Result.ResponseType);
+                });
+                tasks.Add(continueTask);
             }
             await Task.WhenAll(tasks);
-            return tasks.Max(t => t.Result.ResponseType);
+            return responses.Any() ? responses.Max() : ElectionResponseType.NoResponse;
         }
 
         public async Task StopAsync()
@@ -124,16 +164,36 @@ namespace Rhyous.CS6210.Hw4
             _Logger?.Debug("Start requested");
             State = WorkerState.Starting;
             ListenerTask = StartListenerAsync();
-            await UpdateMasterAsync();
             State = WorkerState.Started;
             _Logger?.Debug("Started");
-        }
-        internal Task ListenerTask;
+            Master = await GetMasterAsync();
+            var myselfAsMaster = await UpdateElectionFileAsync();
+            if (Master == null)
+            {
+                _Logger.Debug("I am greater than master. Attempting take over.");
+                await TakeOverAsync(Master, myselfAsMaster, "none");
+            }
+            if (Master < myselfAsMaster)
+            {
+                await ElectionRequestAsync(ElectionRequestType.Election);
+            }
+            else if (Master == myselfAsMaster)
+            {
+                _Logger.Debug("I am the master.");
+                await QueueWorkAsync();
+                return;
+            }
+            else
+                await RequestWorkAsync();
+        } internal Task ListenerTask;
 
         public async Task UpdateMasterAsync()
         {
+            var previousMaster = Master;
             _Logger?.Debug("Updating master.");
             Master = await GetMasterAsync();
+            if (Master != previousMaster)
+                await ElectionRequestAsync(ElectionRequestType.Election);
             await UpdateElectionFileAsync();
             _Logger?.Debug("Master updated.");
             if (IsMaster)
@@ -150,25 +210,28 @@ namespace Rhyous.CS6210.Hw4
         public async Task<Master> GetMasterAsync()
         {
             var masterDirectory = Path.Combine(_PrimaryDirectory, Folders.Master);
-            var currentMaster = await _MasterFileReader.ReadAsync(masterDirectory);
-            var myselfAsMaster = new Master { Connection = Connection, Workers = currentMaster?.Workers };
-            if (currentMaster == null || myselfAsMaster == currentMaster)
-            {
-                myselfAsMaster = currentMaster ?? new Master();
-                myselfAsMaster.Connection = Connection;
-                myselfAsMaster.Workers = currentMaster?.Workers;
-                _Logger?.Debug("I am the master.");
-                return myselfAsMaster;
-            }
-            string pong = await PingAsync(currentMaster.Connection);
-            if (myselfAsMaster > currentMaster || string.IsNullOrWhiteSpace(pong))
-            {
-                await TakeOverAsync(currentMaster, myselfAsMaster, pong);
-                _Logger?.Debug("I am the master.");
-                return myselfAsMaster;
-            }
-            _Logger?.Debug("Current master is: " + currentMaster.ToString());
-            return currentMaster;
+            return await _MasterFileReader.ReadAsync(masterDirectory);
+            //var masterDirectory = Path.Combine(_PrimaryDirectory, Folders.Master);
+            //var currentMaster = await _MasterFileReader.ReadAsync(masterDirectory);
+            //var myselfAsMaster = new Master { Connection = Connection, Workers = currentMaster?.Workers };
+            //if (currentMaster == null || myselfAsMaster == currentMaster)
+            //{
+            //    myselfAsMaster = currentMaster ?? new Master();
+            //    myselfAsMaster.Connection = Connection;
+            //    myselfAsMaster.Workers = currentMaster?.Workers;
+            //    _Logger?.Debug("I am the master.");
+            //    return myselfAsMaster;
+            //}
+            //string pong = await PingAsync(currentMaster.Connection);
+            //if (myselfAsMaster > currentMaster || string.IsNullOrWhiteSpace(pong))
+            //{
+            //    //Master = await TakeOverAsync(currentMaster, myselfAsMaster, pong);
+            //    await ElectionRequestAsync(ElectionRequestType.Election);
+            //    _Logger?.Debug("I am the master.");
+            //    return myselfAsMaster;
+            //}
+            //_Logger?.Debug("Current master is: " + currentMaster.ToString());
+            //return currentMaster;
         }
 
         public async Task StartListenerAsync()
@@ -190,8 +253,7 @@ namespace Rhyous.CS6210.Hw4
         {
             get { return _RequestHandler ?? (_RequestHandler = new RequestHandler()); }
             set { _RequestHandler = value; }
-        }
-        private RequestHandler _RequestHandler;
+        } private RequestHandler _RequestHandler;
 
         public async Task StopListenerAsync()
         {
@@ -213,15 +275,20 @@ namespace Rhyous.CS6210.Hw4
             await _MasterFileWriter.WriteAsync(masterDirectory, myselfAsMaster);
             if (string.IsNullOrWhiteSpace(pong))
             {
-                _Logger?.Debug($"Moving master file to the {Folders.Sleep} directory.");
-                var currentMasterFile = $"{currentMaster.ToString()}.json";
-                var src = Path.Combine(masterDirectory, currentMasterFile);
-                var dst = Path.Combine(_PrimaryDirectory, Folders.Sleep, currentMasterFile);
-                await _UnitOfWorkFileWriter.MoveAsync(src, dst);
+                await PutMasterToSleepAsync(currentMaster, masterDirectory);
             }
             _Logger?.Debug("Taking over as master.");
             ElectInN(3000);
             return myselfAsMaster;
+        }
+
+        private async Task PutMasterToSleepAsync(Master currentMaster, string masterDirectory)
+        {
+            _Logger?.Debug($"Moving master file to the {Folders.Sleep} directory.");
+            var currentMasterFile = $"{currentMaster.ToString()}.json";
+            var src = Path.Combine(masterDirectory, currentMasterFile);
+            var dst = Path.Combine(_PrimaryDirectory, Folders.Sleep, currentMasterFile);
+            await _UnitOfWorkFileWriter.MoveAsync(src, dst);
         }
 
         public async Task ElectInN(int milliseconds)
@@ -230,12 +297,14 @@ namespace Rhyous.CS6210.Hw4
             await UpdateMasterAsync();
         }
 
-        public async Task UpdateElectionFileAsync()
+        public async Task<Master> UpdateElectionFileAsync()
         {
             _Logger?.Debug("Updating my election file.");
             var masterDirectory = Path.Combine(_PrimaryDirectory, Folders.Master);
-            await _MasterFileWriter.WriteAsync(masterDirectory, IsMaster ? Master : new Master { Connection = Connection, Workers = Master?.Workers });
+            var myselfAsMaster = IsMaster ? Master : new Master { Connection = Connection, Workers = Master?.Workers };
+            await _MasterFileWriter.WriteAsync(masterDirectory,  myselfAsMaster);
             _Logger?.Debug("Election file upated.");
+            return myselfAsMaster;
         }
 
         #region IWorkHandler
@@ -250,20 +319,28 @@ namespace Rhyous.CS6210.Hw4
             {
                 var pong = await PingAsync(Master.Connection);
                 if (string.IsNullOrWhiteSpace(pong))
-                    TakeOverAsync(Master, new Master { Connection = Connection, Workers = Master.Workers }, pong);
-                else
                 {
-                    if (NullWorkResponseCounter < 3)
-                    {
-                        await RequestWorkAsync();
-                    }
-                    StopAsync(); // Master is up, no work left
+                    await TakeOverAsync(Master, new Master { Connection = Connection, Workers = Master.Workers }, pong);
                     return false;
                 }
+                else
+                {
+                    if (NullWorkResponseCounter++ < 3)
+                    {
+                        _Logger?.Debug("No work received. Trying request again.");
+                        return await RequestWorkAsync();
+                    }
+                    _Logger?.Debug("No work received.");
+                    await StopAsync(); // Master is up, no work left
+                }
+                return false;
             }
             else
-                DoWorkAsync(unitOfWork);
-            return unitOfWork != null;
+            {
+                await DoWorkAsync(unitOfWork);
+                NullWorkResponseCounter = 0;
+                return true;
+            }
         } private int NullWorkResponseCounter = 0;
 
         public async Task DoWorkAsync(UnitOfWork unitOfWork)
@@ -312,6 +389,9 @@ namespace Rhyous.CS6210.Hw4
 
         public async Task QueueWorkAsync()
         {
+            if (DateTime.Now < NextRun)
+                return;
+            NextRun = DateTime.Now.AddSeconds(10);
             var queueDir = Path.Combine(_PrimaryDirectory, Folders.WorkQueue);
             var dirExists = await _DirectoryPreparer.DirectoryExistsAsync(queueDir);
             if (!dirExists)
@@ -335,6 +415,7 @@ namespace Rhyous.CS6210.Hw4
                         Status = WorkStatus.Queued
                     };
                     var fileName = $"{unitOfWork.Id}.json";
+                    filename = fileName.PadLeft(10, '0');
                     var fileExists = files.Any(f=>f.EndsWith(fileName));
                     if (fileExists)
                     {
@@ -346,7 +427,8 @@ namespace Rhyous.CS6210.Hw4
                 }
                 i++;
             }
-        }
+            _Logger?.Debug($"Work queue completed. Awaiting requests.");
+        } private DateTime NextRun;
 
         public async Task<bool> MarkWorkCompletedAsync(UnitOfWork unitOfWork)
         {

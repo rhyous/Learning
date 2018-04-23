@@ -10,7 +10,7 @@ namespace Rhyous.CS6210.Hw4.Models
     public class RequestClient : IRequestClient
     {
         public virtual TimeSpan RequestTimeout => TimeSpan.FromMilliseconds(ConfigurationManager.AppSettings.Get("RequestTimeoutMilliseconds", 3000));
-        public virtual int RequestRetries => ConfigurationManager.AppSettings.Get("RequestRetries", 3);
+        public virtual int RequestRetries => ConfigurationManager.AppSettings.Get("RequestRetries", 4);
 
         static async Task<CreateSocketResult> GetRequestZSocketAsync(ZContext context, string name, IpAddress ip, int port)
         {

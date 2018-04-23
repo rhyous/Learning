@@ -22,6 +22,7 @@ namespace Rhyous.CS6210.Hw4
         {
             var packet = new Packet<ElectionRequest>
             {
+                Type = "Elect",
                 Payload = new ElectionRequest { RequestType = ElectionRequestType.Election }
             };
             var result = _Client.SendAsync(connection.Name, packet, connection.IpAddress, 

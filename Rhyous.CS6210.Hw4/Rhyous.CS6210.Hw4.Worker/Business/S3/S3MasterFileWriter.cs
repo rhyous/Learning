@@ -18,7 +18,7 @@ namespace Rhyous.CS6210.Hw4
 
         public async Task WriteAsync(string masterDirectory, Master master)
         {
-            var folderExists = await BucketManager.FolderExists(_Client, _Bucket, masterDirectory);
+            var folderExists = await BucketManager.FolderExistsAsync(_Client, _Bucket, masterDirectory);
             if (!folderExists)
                 return;
             var filename = $"{master.ToString()}.json";

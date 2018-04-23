@@ -13,10 +13,11 @@ namespace Rhyous.CS6210.Hw4
         Task<Master> GetMasterAsync();
         Task UpdateMasterAsync();
 
+        Task<Master> UpdateElectionFileAsync();
+
         Task<string> PingAsync(WorkerConnection connection);
 
         Task<bool> RegisterAsync();
-        Task UpdateElectionFileAsync();
         Task<Master> TakeOverAsync(Master currentMaster, Master myselfAsMaster, string pong);
 
         Task<ElectionResponseType> ElectionRequestAsync(ElectionRequestType type);

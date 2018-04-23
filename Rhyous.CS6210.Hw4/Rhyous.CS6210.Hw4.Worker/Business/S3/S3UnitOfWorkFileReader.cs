@@ -27,7 +27,7 @@ namespace Rhyous.CS6210.Hw4
         public async Task<string> GetNextFileAsync(string unitOfWorkDirectory)
         {
             unitOfWorkDirectory = unitOfWorkDirectory.Replace("\\","/");
-            var folderExists = await BucketManager.FolderExists(_Client, _Bucket, unitOfWorkDirectory);
+            var folderExists = await BucketManager.FolderExistsAsync(_Client, _Bucket, unitOfWorkDirectory);
             if (!folderExists)
                 return null;
             var unitOfWorkFiles = await BucketManager.ListFilesAsync(_Client, _Bucket, unitOfWorkDirectory, "*.json");
@@ -37,7 +37,7 @@ namespace Rhyous.CS6210.Hw4
         public async Task<string> ReadAllTextAsync(string pathToFile)
         {
             pathToFile = pathToFile.Replace("\\", "/");
-            var fileExists = await BucketManager.FileExists(_Client, _Bucket, pathToFile);
+            var fileExists = await BucketManager.FileExistsAsync(_Client, _Bucket, pathToFile);
             if (!fileExists)
                 return null;
             var text = await BucketManager.ReadAllTextAsync(_Client, _Bucket, pathToFile);

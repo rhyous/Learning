@@ -7,6 +7,11 @@
     <StartupObject />
     <RootNamespace>Rhyous.CS6210.Hw4</RootNamespace>
 	<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+	<PackageId>Rhyous.CS6210.Hw4</PackageId>
+	<Authors>Rhyous.CS6210.Hw4</Authors>
+	<Company>Rhyous.CS6210.Hw4</Company>
+	<Product>Rhyous.CS6210.Hw4</Product>
+	<AssemblyName>Rhyous.CS6210.Hw4.Worker</AssemblyName>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -14,8 +19,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AWSSDK.Core" Version="3.3.21.20" />
-    <PackageReference Include="AWSSDK.S3" Version="3.3.18" />
+    <PackageReference Include="AWSSDK.Core" Version="3.3.22" />
+    <PackageReference Include="AWSSDK.S3" Version="3.3.18.1" />
     <PackageReference Include="log4net" Version="2.0.8" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
     <PackageReference Include="Rhyous.SimpleArgs" Version="2.0.0" />

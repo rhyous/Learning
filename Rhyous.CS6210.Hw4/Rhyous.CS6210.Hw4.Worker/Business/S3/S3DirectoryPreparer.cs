@@ -21,12 +21,12 @@ namespace Rhyous.CS6210.Hw4
 
         public async Task<bool> DirectoryExistsAsync(string dir)
         {
-            return await BucketManager.FolderExists(_Client, _Bucket, dir);
+            return await BucketManager.FolderExistsAsync(_Client, _Bucket, dir);
         }
 
         public async Task<bool> FileExistsAsync(string file)
         {
-            return await BucketManager.FileExists(_Client, _Bucket, file);
+            return await BucketManager.FileExistsAsync(_Client, _Bucket, file);
         }
 
         public async Task<bool> PrepareAync(string primaryDirectory, IEnumerable<string> subdirs)
@@ -54,10 +54,10 @@ namespace Rhyous.CS6210.Hw4
         internal async Task<bool> CreateDirectoryIfNotExists(string dir)
         {
             dir = dir.Replace("\\", "/");
-            var fileExists = await BucketManager.FolderExists(_Client, _Bucket, dir);
+            var fileExists = await BucketManager.FolderExistsAsync(_Client, _Bucket, dir);
             if (!fileExists)
                 await BucketManager.CreateBucketDirectoryAsync(_Client, _Bucket, dir);
-            return await BucketManager.FolderExists(_Client, _Bucket, dir);
+            return await BucketManager.FolderExistsAsync(_Client, _Bucket, dir);
         }
     }
 }
