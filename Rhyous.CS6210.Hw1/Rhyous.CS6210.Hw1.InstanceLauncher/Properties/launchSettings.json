@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "Rhyous.CS6210.Hw1.InstanceLauncher": {
-      "commandName": "Project",
-      "commandLineArgs": "AK=<putyourshere> SK=<putyourshere> B=rhyous.ms.of.cs k=Key2018 InstanceName=Hw2Server1 ld=C:\\Rhyous\\Rhyous.MastersOfComputerScience\\Rhyous.CS6210.Hw1\\Run script=C:\\Rhyous\\Rhyous.MastersOfComputerScience\\Rhyous.CS6210.Hw1\\Rhyous.CS6210.Hw1.InstanceLauncher\\Scripts\\DownloadFiles.ps1 skip=UploadFiles rd=\"Run/\" idir=c:\\Run\\"
-    }
-  }
-}
