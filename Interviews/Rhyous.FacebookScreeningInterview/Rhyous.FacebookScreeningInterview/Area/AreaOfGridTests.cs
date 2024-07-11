@@ -19,7 +19,7 @@ namespace Rhyous.FacebookScreeningInterview.Area
             {
                 { 1, 1 },
                 { 1, 1 },
-                { 1, 1, }
+                { 1, 1 }
             };
             var areaOfGrid = new AreaOfGrid();
 
@@ -39,7 +39,7 @@ namespace Rhyous.FacebookScreeningInterview.Area
             {
                 { 0, 0 },
                 { 0, 0 },
-                { 0, 0, }
+                { 0, 0 }
             };
             var areaOfGrid = new AreaOfGrid();
 
